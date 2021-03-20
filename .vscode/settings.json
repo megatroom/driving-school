@@ -1,0 +1,9 @@
+{
+  "eslint.workingDirectories": [
+    {
+      "pattern": "./packages/*/",
+      "changeProcessCWD": true
+    }
+  ],
+  "editor.formatOnSave": true
+}

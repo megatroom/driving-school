@@ -1,0 +1,39 @@
+{
+  "name": "backend",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./src/server.ts",
+    "build": "tsc --project ./src",
+    "make-migration": "knex migrate:make",
+    "migrate": "knex migrate:latest"
+  },
+  "bugs": {
+    "url": "https://github.com/megatroom/driving-school/issues"
+  },
+  "dependencies": {
+    "body-parse": "^0.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-joi-validation": "^5.0.0",
+    "joi": "^17.4.0",
+    "joi-extract-type": "^15.0.8",
+    "knex": "^0.95.2",
+    "mysql": "^2.18.1",
+    "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.0",
+    "@types/cors": "^2.8.10",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.11",
+    "@types/joi": "^17.2.3",
+    "@types/knex": "^0.16.1",
+    "@types/node": "^14.14.35",
+    "nodemon": "^2.0.7",
+    "prettier": "2.2.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
+  }
+}
