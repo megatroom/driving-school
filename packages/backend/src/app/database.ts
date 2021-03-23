@@ -1,19 +1,21 @@
-import Knex from "knex";
-import config from "../config";
+import knex, { Knex } from "knex";
+import config from "./config";
+import logger from "./logger";
 
-const connection = () => {
+let singletonConnection: Knex;
+
+export const initDbConnection = () => {
   const db = config.database;
-  let connection;
 
   if (db.client === "sqlite") {
-    connection = Knex({
+    singletonConnection = knex({
       client: "sqlite3",
       connection: {
         filename: db.database,
       },
     });
   } else {
-    connection = Knex({
+    singletonConnection = knex({
       client: "mysql",
       connection: {
         host: db.host,
@@ -25,7 +27,9 @@ const connection = () => {
     });
   }
 
-  return connection;
+  logger.info(`Database connected in ${db.client}`);
 };
 
-export default connection;
+export const getDbConnection = () => {
+  return singletonConnection;
+};

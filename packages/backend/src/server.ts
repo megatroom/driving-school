@@ -1,8 +1,9 @@
-import serverApp from "./app";
-import config from "./config";
+import config from "./app/config";
+import logger from "./app/logger";
+import app from "./app";
 
 const PORT = config.port;
 
-serverApp.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
+app.listen(PORT, () => {
+  logger.info(`Server started on http://localhost:${PORT}`);
 });

@@ -1,16 +1,16 @@
-import { Router } from "express";
-import { createValidator } from "express-joi-validation";
-import Joi from "joi";
-import "joi-extract-type";
+import { Router } from 'express'
+import joi from 'joi'
+import 'joi-extract-type'
 
 import {
   formatRequestPagination,
   paginationQuerySchema,
-} from "../../schemas/pagination";
-import CarType from "../../models/CarType";
+} from '../../schemas/pagination'
+import authenticate from '../../middlewares/authenticate'
+import validate from '../../middlewares/validate'
+import CarType from '../../models/CarType'
 
-const router = Router();
-const validator = createValidator();
+const router = Router()
 
 // router.get(
 //   "/cars/types/:id",
@@ -32,21 +32,22 @@ const validator = createValidator();
 // );
 
 router.get(
-  "/cars/types",
-  validator.query(Joi.object(paginationQuerySchema())),
+  '/cars/types',
+  authenticate(),
+  validate({ query: paginationQuerySchema() }),
   async (req, res, next) => {
     try {
-      const { perPage, offset, order } = formatRequestPagination(req);
+      const { perPage, offset, order } = formatRequestPagination(req)
 
-      const model = new CarType();
-      const total = await model.count();
-      const carTypes = await model.findAll(perPage, offset, order);
+      const model = new CarType()
+      const total = await model.count()
+      const carTypes = await model.findAll(perPage, offset, order)
 
-      res.json({ carTypes, total });
+      res.json({ carTypes, total })
     } catch (error) {
-      next(error);
+      next(error)
     }
   }
-);
+)
 
-export default router;
+export default router

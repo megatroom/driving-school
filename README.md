@@ -1,2 +1,3 @@
-# driving-school
-Complete system for driving school
+# Driving School
+
+Complete system for driving school.

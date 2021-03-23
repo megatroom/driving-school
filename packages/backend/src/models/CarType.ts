@@ -1,14 +1,14 @@
 import joi from "joi";
 import { Knex } from "knex";
 // import validation from "../helpers/validation";
-import connection from "./connection";
+import { getDbConnection } from "../app/database";
 
 class CarType {
   connection: Knex;
   tableName: string;
 
   constructor() {
-    this.connection = connection();
+    this.connection = getDbConnection();
     this.tableName = "tipocarros";
   }
 
