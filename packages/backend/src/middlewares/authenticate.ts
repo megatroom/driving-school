@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response, NextFunction, SessionUser } from '../app/types'
 import { validateToken } from '../app/security'
 
 const authenticate = () => (
@@ -10,14 +10,14 @@ const authenticate = () => (
   let isAuthenticated = false
 
   if (authorization) {
-    let data = null
+    let decoded = null
 
     try {
-      data = validateToken(authorization)
+      decoded = validateToken(authorization)
     } catch (e) {}
 
-    if (data) {
-      res.locals.user = data
+    if (decoded) {
+      req.user = decoded as SessionUser
       isAuthenticated = true
     }
   }
