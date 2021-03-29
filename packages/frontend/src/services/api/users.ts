@@ -25,20 +25,20 @@ export interface Menu {
   pages: Page[]
 }
 
-export interface CurrentUser {
+export interface UserProfile {
   user: User
   menu: Menu
 }
 
-export const getCurrentUser = (): AsyncServiceResponse<CurrentUser> =>
-  client.get('/users/current')
+export const getUserProfile = (): AsyncServiceResponse<UserProfile> =>
+  client.get('/users/profile')
 
 export const signin = async (
   data: SigninPayload
-): Promise<ServiceResponse<CurrentUser>> => {
+): Promise<ServiceResponse<UserProfile>> => {
   const res = await client.post('/users/signin', data)
 
   client.saveToken(res.data.token)
 
-  return await getCurrentUser()
+  return await getUserProfile()
 }

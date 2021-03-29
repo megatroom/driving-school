@@ -21,6 +21,12 @@ export interface ServiceResponse<T = any> extends AxiosResponse<T> {}
 
 export interface AsyncServiceResponse<T = any> extends AxiosPromise<T> {}
 
+export interface Pagination {
+  page: number
+  perPage: number
+  order: string
+}
+
 const client = {
   get: (url: string, config = {}) => request({ ...config, method: 'get', url }),
 

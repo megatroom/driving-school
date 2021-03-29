@@ -9,7 +9,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import TextField from 'atoms/form/TextField'
 import { SigninPayload, signin } from 'services/api/users'
-import { useUser } from 'context/user'
+import { AuthStatus, useUser } from 'context/user'
 import { useEffect } from 'react'
 
 const useStyles = makeStyles((theme) => ({
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login() {
   const { control, handleSubmit } = useForm()
-  const { isAuthenticated, setCurrentUser } = useUser()
+  const { authStatus, setCurrentUser } = useUser()
   const classes = useStyles()
   const navigate = useNavigate()
 
@@ -41,10 +41,10 @@ export default function Login() {
   }
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (authStatus === AuthStatus.authenticated) {
       navigate('/')
     }
-  }, [isAuthenticated, navigate])
+  }, [authStatus, navigate])
 
   return (
     <>

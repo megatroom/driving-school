@@ -4,18 +4,25 @@ import {
   useContext,
   useCallback,
   Reducer,
+  useEffect,
 } from 'react'
-import { User, Menu } from 'services/api/users'
+import { User, Menu, getUserProfile } from 'services/api/users'
+
+export enum AuthStatus {
+  idle,
+  authenticated,
+  unauthenticated,
+}
 
 interface State {
-  isAuthenticated: boolean
+  authStatus: AuthStatus
   user?: User
-  menu?: Menu
+  menu?: Menu[]
   setCurrentUser: (data: any) => void
 }
 
 const initialState = {
-  isAuthenticated: false,
+  authStatus: AuthStatus.idle,
   setCurrentUser: () => {},
 }
 
@@ -27,7 +34,12 @@ const reducer: Reducer<State, any> = (state, action) => {
       return {
         ...state,
         ...action.data,
-        isAuthenticated: true,
+        authStatus: AuthStatus.authenticated,
+      }
+    case 'logout':
+      return {
+        ...initialState,
+        authStatus: AuthStatus.unauthenticated,
       }
     default:
       throw new Error()
@@ -36,6 +48,16 @@ const reducer: Reducer<State, any> = (state, action) => {
 
 export const UserProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
+
+  useEffect(() => {
+    getUserProfile()
+      .then(({ data }) => {
+        dispatch({ type: 'set-current-user', data })
+      })
+      .catch(() => {
+        dispatch({ type: 'logout' })
+      })
+  }, [])
 
   return (
     <UserContext.Provider

@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 
-import Routes from './Routes'
+import Routes from './routes'
 import { theme } from 'context/theme'
 import { UserProvider } from 'context/user'
 
