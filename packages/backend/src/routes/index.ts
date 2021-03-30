@@ -1,5 +1,5 @@
-import usersSignin from './users/signin'
+import usersLogin from './auth/login'
 import usersProfile from './users/profile'
 import carsTypes from './cars/types'
 
-export default [usersSignin, usersProfile, carsTypes]
+export default [usersLogin, usersProfile, carsTypes]

@@ -1,5 +1,12 @@
 {
   "name": "driving-school",
+  "version": "0.0.0",
+  "scripts": {
+    "test": "lerna run test",
+    "cover": "lerna run cover",
+    "lint:check": "lerna run lint:check",
+    "prettier:check": "lerna run prettier:check"
+  },
   "dependencies": {
     "lerna": "^4.0.0"
   }

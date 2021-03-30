@@ -9,7 +9,7 @@ import { generateToken } from '../../app/security'
 const router = Router()
 
 router.post(
-  '/users/signin',
+  '/auth/login',
   validate({
     body: {
       login: joi.string().required(),

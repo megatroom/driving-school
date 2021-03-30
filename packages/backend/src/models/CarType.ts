@@ -1,81 +1,58 @@
-import joi from "joi";
-import { Knex } from "knex";
-// import validation from "../helpers/validation";
-import { getDbConnection } from "../app/database";
-
-class CarType {
-  connection: Knex;
-  tableName: string;
-
+import joi from 'joi'
+import BaseModel from './BaseModel'
+class CarType extends BaseModel {
   constructor() {
-    this.connection = getDbConnection();
-    this.tableName = "tipocarros";
+    super('tipocarros')
   }
 
-  // static postSchema() {
-  //   return {
-  //     description: joi.string().required().error(validation.validateError()),
-  //     commission: joi.number().required().error(validation.validateError()),
-  //   };
-  // }
+  static postSchema() {
+    return {
+      description: joi.string().required(),
+      commission: joi.number().required(),
+    }
+  }
 
-  // castModel(model) {
-  //   return {
-  //     descricao: model.description,
-  //     comissao: model.commission,
-  //   };
-  // }
+  static labelsSchema() {
+    return {
+      description: 'Descrição',
+      commission: 'Comissão',
+    }
+  }
 
-  // save(model) {
-  //   return this.connection
-  //     .insert(this.castModel(model))
-  //     .into(this.tableName)
-  //     .then((ids) => ids[0]);
-  // }
-
-  count() {
-    return this.connection(this.tableName)
-      .count("id as total")
-      .then((models) => models[0].total);
+  castPayloadToModel(payload: any) {
+    return {
+      descricao: payload.description,
+      comissao: payload.commission,
+    }
   }
 
   findAll(limit: number, offset: number, order: string[]) {
     const orderBy = order.reduce((accumulator: string[], field: string) => {
       switch (field) {
-        case "description":
-          return accumulator.concat(["descricao"]);
-        case "commission":
-          return accumulator.concat(["comissao"]);
+        case 'description':
+          return accumulator.concat(['descricao'])
+        case 'commission':
+          return accumulator.concat(['comissao'])
         default:
-          return accumulator;
+          return accumulator
       }
-    }, []);
+    }, [])
 
     return this.connection
-      .select("id", "descricao as description", "comissao as commission")
+      .select('id', 'descricao as description', 'comissao as commission')
       .from(this.tableName)
       .orderBy(orderBy)
       .limit(limit)
-      .offset(offset);
+      .offset(offset)
   }
 
-  // findById(id) {
-  //   return this.connection
-  //     .select("id", "descricao as description", "comissao as commission")
-  //     .from(this.tableName)
-  //     .where({ id })
-  //     .then((models) => (models.length ? models[0] : null));
-  // }
-
-  // delete(id) {
-  //   return this.connection(this.tableName).where({ id }).del();
-  // }
-
-  // update(id, model) {
-  //   return this.connection(this.tableName)
-  //     .where({ id })
-  //     .update(this.castModel(model));
-  // }
+  findById(id: number) {
+    return this.connection
+      .select('id', 'descricao as description', 'comissao as commission')
+      .from(this.tableName)
+      .where({ id })
+      .then((models) => (models.length ? models[0] : null))
+  }
 }
 
-export default CarType;
+export default CarType
