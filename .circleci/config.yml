@@ -1,0 +1,53 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@4.0.0
+  codecov: codecov/codecov@1.1.1
+
+jobs:
+  tests:
+    docker:
+      - image: circleci/node:14.16.0-browsers
+    steps:
+      - checkout
+      - node/install-yarn
+      - run:
+          name: Show Node version
+          command: |
+            node --version
+            yarn --version
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          name: Run lint check
+          command: yarn lint:check
+      - run:
+          name: Run prettier check
+          command: yarn prettier:check
+      - run:
+          name: Run unit tests with coverage
+          command: yarn cover
+      - codecov/upload:
+          file: coverage/*.json
+      - run:
+          name: Publish to Chromatic
+          command: yarn chromatic --project-token=${CHROMATIC_TOKEN}
+  versioning:
+    docker:
+      - image: circleci/node:14.16.0
+    steps:
+      - checkout
+      - run:
+          name: Check package version
+          command: node scripts/check-version megatroom driving-school
+
+workflows:
+  ci:
+    jobs:
+      - tests
+      - versioning:
+          filters:
+            branches:
+              ignore: master
+            tags:
+              ignore: /.*/
