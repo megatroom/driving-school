@@ -10,6 +10,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 
+import config from 'config'
+
 const drawerWidth = 240
 
 const useStyles = makeStyles((theme) => ({
@@ -132,7 +134,7 @@ export default function AppBar({ menuOpen, onMenuClick }: Props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Driving School
+            {config.title}
           </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
