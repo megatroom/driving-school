@@ -5,7 +5,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "prettier:check": "prettier --check src",
+    "prettier:fix": "prettier --write src"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.3",
