@@ -1,6 +1,7 @@
 import joi from 'joi'
 import BaseModel from './BaseModel'
-class CarType extends BaseModel {
+
+export default class CarType extends BaseModel {
   constructor() {
     super('tipocarros')
   }
@@ -54,5 +55,3 @@ class CarType extends BaseModel {
       .then((models) => (models.length ? models[0] : null))
   }
 }
-
-export default CarType

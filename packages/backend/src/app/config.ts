@@ -30,4 +30,7 @@ export default {
     user: process.env.DB_USER,
     password: process.env.DB_PWD,
   },
+  log: {
+    level: process.env.REACT_APP_LOG_LEVEL || 'debug',
+  },
 }

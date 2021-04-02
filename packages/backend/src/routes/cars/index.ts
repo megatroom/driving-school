@@ -8,23 +8,23 @@ import {
 import { idSchema } from '../../schemas/core'
 import authenticate from '../../middlewares/authenticate'
 import validate from '../../middlewares/validate'
-import CarType from '../../models/CarType'
+import Car from '../../models/Car'
 
 const router = Router()
 
 router.get(
-  '/cars/types',
+  '/cars',
   authenticate(),
   validate({ query: paginationQuerySchema() }),
   async (req, res, next) => {
     try {
       const { perPage, offset, order } = formatRequestPagination(req)
 
-      const model = new CarType()
+      const model = new Car()
       const total = await model.count()
-      const data = await model.findAll(perPage, offset, order)
+      const cars = await model.findAll(perPage, offset, order)
 
-      res.json({ data, total })
+      res.json({ cars, total })
     } catch (error) {
       next(error)
     }
@@ -32,17 +32,17 @@ router.get(
 )
 
 router.post(
-  '/cars/types',
+  '/cars',
   validate({
-    labels: CarType.labelsSchema(),
-    body: CarType.postSchema(),
+    labels: Car.labelsSchema(),
+    body: Car.postSchema(),
   }),
   async (req, res, next) => {
     try {
-      const model = new CarType()
-      const carType = await model.create(req.body)
+      const model = new Car()
+      const car = await model.create(req.body)
 
-      res.json(carType)
+      res.json(car)
     } catch (error) {
       next(error)
     }
@@ -56,11 +56,11 @@ router.get(
     try {
       const id = parseInt(req.params.id, 10)
 
-      const model = new CarType()
-      const carType = await model.findById(id)
+      const model = new Car()
+      const car = await model.findById(id)
 
-      if (carType) {
-        res.json(carType)
+      if (car) {
+        res.json(car)
       } else {
         res.status(404).json({})
       }
@@ -73,18 +73,18 @@ router.get(
 router.put(
   '/cars/types/:id',
   validate({
-    labels: CarType.labelsSchema(),
+    labels: Car.labelsSchema(),
     params: idSchema(),
-    body: CarType.postSchema(),
+    body: Car.postSchema(),
   }),
   async (req, res, next) => {
     try {
       const id = parseInt(req.params.id, 10)
 
-      const model = new CarType()
-      const carType = await model.update(id, req.body)
+      const model = new Car()
+      const car = await model.update(id, req.body)
 
-      res.json(carType)
+      res.json(car)
     } catch (error) {
       next(error)
     }
@@ -100,7 +100,7 @@ router.delete(
     try {
       const id = parseInt(req.params.id, 10)
 
-      const model = new CarType()
+      const model = new Car()
       await model.delete(id)
 
       res.json({})

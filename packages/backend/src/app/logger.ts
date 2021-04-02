@@ -1,7 +1,8 @@
-import winston from "winston";
+import winston from 'winston'
+import config from '../app/config'
 
 const logger = winston.createLogger({
-  level: "info",
+  level: config.log.level,
   format: winston.format.json(),
   defaultMeta: {},
   transports: [
@@ -9,6 +10,6 @@ const logger = winston.createLogger({
       format: winston.format.simple(),
     }),
   ],
-});
+})
 
-export default logger;
+export default logger
