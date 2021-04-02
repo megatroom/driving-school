@@ -1,19 +1,31 @@
 import { useState } from 'react'
 import { useQueryClient, useQuery } from 'react-query'
-import { useNavigate } from 'react-router-dom'
 import Container from '@material-ui/core/Container'
 
 import DataTable, { Column } from 'organisms/DataTable'
 import { Pagination } from 'services/api/client'
 
+interface ResLoadData {
+  data: any[]
+  total: number
+}
 interface Props {
+  onNewClick: () => void
+  onDeleteClick: (id: number) => Promise<any>
+  loadData: (pagination: Pagination) => Promise<ResLoadData>
   id: string
-  loadData: (pagination: Pagination) => Promise<any[]>
+  primaryTextKey: string
   columns: Column[]
 }
 
-export default function ListPage({ id, loadData, columns }: Props) {
-  const navigate = useNavigate()
+export default function ListPage({
+  onNewClick,
+  onDeleteClick,
+  loadData,
+  id,
+  primaryTextKey,
+  columns,
+}: Props) {
   const queryClient = useQueryClient()
   const [pagination, setPagination] = useState({
     page: 1,
@@ -21,36 +33,54 @@ export default function ListPage({ id, loadData, columns }: Props) {
     order: 'description',
   })
 
-  const { isLoading, error, data } = useQuery<any[], Error>(
+  const { isLoading, error, data } = useQuery<ResLoadData, Error>(
     [id, pagination],
-    () => {
-      return loadData(pagination)
-    }
+    () => loadData(pagination)
   )
+
+  const handlePaginationChange = (newState: any) => {
+    setPagination((prevState) => ({
+      ...prevState,
+      ...newState,
+    }))
+    queryClient.invalidateQueries(id)
+  }
 
   return (
     <Container maxWidth="md">
       <DataTable
         title="Tipos de carro"
+        primaryTextKey={primaryTextKey}
         columns={columns}
-        rows={data || []}
+        total={data?.total || 0}
+        rows={data?.data || []}
         rowsPerPage={pagination.perPage}
         page={pagination.page - 1}
+        order={pagination.order}
         isLoading={isLoading}
         error={error}
-        onPageChange={() => {}}
+        onPageChange={(event, newPage) => {
+          handlePaginationChange({
+            page: newPage + 1,
+          })
+        }}
         onRowsPerPageChange={(event) => {
-          setPagination((prevState) => ({
-            ...prevState,
+          handlePaginationChange({
             perPage: event.target.value,
-          }))
-          queryClient.invalidateQueries(id)
+          })
         }}
-        onRowClick={(id) => {
-          navigate(`/cars/types/edit/${id}`)
+        onNewClick={onNewClick}
+        onDeleteClick={(deleteId) => {
+          onDeleteClick(deleteId).then(() => {
+            queryClient.invalidateQueries(id)
+          })
         }}
-        onNewClick={() => {
-          navigate(`/cars/types/new`)
+        onOrderChange={(key) => {
+          if (key !== pagination.order) {
+            handlePaginationChange({
+              order: key,
+            })
+          }
         }}
       />
     </Container>

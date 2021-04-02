@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import clsx from 'clsx'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
@@ -13,8 +15,11 @@ import IconButton from '@material-ui/core/IconButton'
 import Paper from '@material-ui/core/Paper'
 import Skeleton from '@material-ui/lab/Skeleton'
 import AddIcon from '@material-ui/icons/Add'
+import DeleteIcon from '@material-ui/icons/Delete'
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 
 import { formatNumberToString } from 'formatters/NumberFormatter'
+import ConfirmDialog from 'atoms/ConfirmDialog'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -31,8 +36,16 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flex: '1 1 100%',
   },
-  bodyRow: {
+  orderIcon: {
+    marginLeft: '3px',
+    verticalAlign: 'middle',
+  },
+  tableHeadClickable: {
     cursor: 'pointer',
+  },
+  rowClickable: {
+    cursor: 'pointer',
+    textDecoration: 'underline',
   },
 }))
 
@@ -43,20 +56,7 @@ export interface Column {
   label: string
   align?: 'left' | 'center' | 'right' | 'justify'
   type?: ColumnType
-}
-
-interface Props {
-  title: string
-  columns: Column[]
-  rows: any[]
-  rowsPerPage: number
-  page: number
-  isLoading?: boolean
-  error?: Error | null
-  onPageChange: () => void
-  onRowsPerPageChange: (event: any) => void
-  onRowClick: (id: number) => void
-  onNewClick: () => void
+  onClick?: (id: number) => void
 }
 
 const getEmptyRows = (rowsPerPage: number) => {
@@ -79,21 +79,49 @@ const formatValue = (type: ColumnType, value: any) => {
   return value
 }
 
+interface Props {
+  title: string
+  primaryTextKey: string
+  columns: Column[]
+  total: number
+  rows: any[]
+  rowsPerPage: number
+  order?: string
+  page: number
+  isLoading?: boolean
+  error?: Error | null
+  onPageChange: (event: unknown, newPage: number) => void
+  onRowsPerPageChange: (event: any) => void
+  onNewClick: () => void
+  onDeleteClick?: (id: number) => void
+  onOrderChange?: (key: string) => void
+}
+
+type DeletePayload = { id: number; text: string } | undefined
+
 export default function DataTable({
   title,
+  primaryTextKey,
   columns,
+  total,
   rows,
   rowsPerPage,
+  order,
   page,
   isLoading,
   error,
   onPageChange,
   onRowsPerPageChange,
-  onRowClick,
   onNewClick,
+  onDeleteClick,
+  onOrderChange,
 }: Props) {
   const classes = useStyles()
+  const [deletePayload, setDeletePayload] = useState<
+    DeletePayload | undefined
+  >()
   const newRows = isLoading ? getEmptyRows(rowsPerPage) : rows
+  const hasActions = !!onDeleteClick
 
   if (error) return <p>'An error has occurred: ' + error.message</p>
 
@@ -122,26 +150,35 @@ export default function DataTable({
                 <TableCell
                   key={`table-column-${column.key}`}
                   align={column.align || 'left'}
+                  className={clsx({ [classes.tableHeadClickable]: !!order })}
+                  onClick={() => {
+                    order && onOrderChange && onOrderChange(column.key)
+                  }}
                 >
                   {column.label}
+                  {order && order === column.key && (
+                    <span className={classes.orderIcon}>
+                      <ArrowDownwardIcon fontSize="inherit" />
+                    </span>
+                  )}
                 </TableCell>
               ))}
+              {hasActions && <TableCell>&nbsp;</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
             {newRows.map((row) => (
-              <TableRow
-                key={`table-row-${row.id}`}
-                className={classes.bodyRow}
-                onClick={() => {
-                  onRowClick(row.id)
-                }}
-                hover
-              >
+              <TableRow key={`table-row-${row.id}`} hover>
                 {columns.map((column) => (
                   <TableCell
                     key={`table-row-${row.id}-cell-${column.key}`}
                     align={column.align || 'left'}
+                    className={clsx({
+                      [classes.rowClickable]: !!column.onClick,
+                    })}
+                    onClick={() => {
+                      column.onClick && column.onClick(row.id)
+                    }}
                   >
                     {isLoading ? (
                       <Skeleton variant="text" />
@@ -150,6 +187,24 @@ export default function DataTable({
                     )}
                   </TableCell>
                 ))}
+                {hasActions && (
+                  <TableCell align="right">
+                    <Tooltip title="Excluir">
+                      <IconButton
+                        aria-label="excluir"
+                        size="small"
+                        onClick={() =>
+                          setDeletePayload({
+                            id: row.id,
+                            text: row[primaryTextKey],
+                          })
+                        }
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
@@ -157,13 +212,26 @@ export default function DataTable({
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={rows.length}
         rowsPerPage={rowsPerPage}
+        component="div"
+        count={total}
         page={page}
         onChangePage={onPageChange}
         onChangeRowsPerPage={onRowsPerPageChange}
       />
+      <ConfirmDialog
+        id="delete"
+        onCancel={() => {
+          setDeletePayload(undefined)
+        }}
+        onConfirm={() => {
+          onDeleteClick && onDeleteClick(deletePayload?.id || 0)
+          setDeletePayload(undefined)
+        }}
+        open={!!deletePayload}
+      >
+        {`Confirma e exclusão do registro "${deletePayload?.text || ''}"?`}
+      </ConfirmDialog>
     </Paper>
   )
 }

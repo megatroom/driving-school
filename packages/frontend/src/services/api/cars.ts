@@ -1,4 +1,4 @@
-import client, { Pagination } from './client'
+import client, { Pagination, ResponseListData } from './client'
 
 export interface CarType {
   id: number
@@ -15,10 +15,10 @@ export const getCarTypes = ({
   page,
   perPage,
   order,
-}: Pagination): Promise<CarType[]> =>
+}: Pagination): Promise<ResponseListData<CarType>> =>
   client
     .get(`/cars/types?page=${page}&perPage=${perPage}&order=${order}`)
-    .then(({ data }) => data.carTypes)
+    .then(({ data }) => data)
 
 export const getCarType = (id: number): Promise<CarType> =>
   client.get(`/cars/types/${id}`).then(({ data }) => data)

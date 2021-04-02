@@ -64,6 +64,11 @@ export interface Pagination {
   order: string
 }
 
+export interface ResponseListData<T> {
+  data: T[]
+  total: number
+}
+
 const client = {
   get: (url: string, config = {}) => request({ ...config, method: 'get', url }),
 
