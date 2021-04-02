@@ -1,6 +1,7 @@
 import { BrowserRouter as Router } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Helmet } from 'react-helmet'
+import { SnackbarProvider } from 'notistack'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 
@@ -21,9 +22,11 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <UserProvider>
           <ThemeProvider theme={theme}>
-            <Router>
-              <Routes />
-            </Router>
+            <SnackbarProvider maxSnack={5}>
+              <Router>
+                <Routes />
+              </Router>
+            </SnackbarProvider>
           </ThemeProvider>
         </UserProvider>
       </QueryClientProvider>

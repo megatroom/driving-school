@@ -1,4 +1,9 @@
-import axios, { AxiosRequestConfig, AxiosPromise, AxiosResponse } from 'axios'
+import axios, {
+  AxiosRequestConfig,
+  AxiosPromise,
+  AxiosResponse,
+  AxiosError,
+} from 'axios'
 import storage from 'local-storage-fallback'
 
 const KEY_TOKEN = 'ds-token'
@@ -8,12 +13,44 @@ const instance = axios.create({
   timeout: 6000,
 })
 
+const adaptValidationError = (error: AxiosError<any>) => {
+  if (!error.response || error.response.status !== 400) {
+    return undefined
+  }
+
+  const { data } = error.response
+
+  if (!data || !data.errors || !data.errors.length) {
+    return undefined
+  }
+
+  return data.errors.reduce((acc: any, error: any, index: number) => {
+    return {
+      ...acc,
+      [error.key || `unknown-index-${index}`]: {
+        label: error.label,
+        message: error.message,
+      },
+    }
+  }, {})
+}
+
 const request = (config: AxiosRequestConfig) => {
   const token = storage.getItem(KEY_TOKEN) || ''
 
-  return instance.request({
-    ...config,
-    headers: { ...config.headers, Authorization: token },
+  return new Promise<AxiosResponse>((resolve, reject) => {
+    instance
+      .request({
+        ...config,
+        headers: { ...config.headers, Authorization: token },
+      })
+      .then(resolve)
+      .catch((error) => {
+        reject({
+          ...error,
+          validation: adaptValidationError(error),
+        })
+      })
   })
 }
 

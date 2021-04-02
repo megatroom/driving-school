@@ -7,6 +7,7 @@ import NotFound from './NotFound'
 import Login from './auth/login'
 import Home from './home'
 import CarsTypes from './cars/types'
+import CarsTypesForm from './cars/types/form'
 
 type PageRecord = Record<number, string>
 const PageGroupRecord: Record<number, PageRecord> = {
@@ -35,6 +36,8 @@ export default function AppRoutes() {
       <Route path="/" element={<PrivateLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/cars/types" element={<CarsTypes />} />
+        <Route path="/cars/types/new" element={<CarsTypesForm />} />
+        <Route path="/cars/types/edit/:id" element={<CarsTypesForm />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

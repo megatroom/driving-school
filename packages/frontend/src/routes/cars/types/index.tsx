@@ -7,9 +7,13 @@ export default function Index() {
       id="car-types"
       loadData={getCarTypes}
       columns={[
-        { key: 'id', label: 'ID' },
         { key: 'description', label: 'Descrição' },
-        { key: 'commission', label: 'Comissão', align: 'right' },
+        {
+          key: 'commission',
+          label: 'Comissão',
+          align: 'right',
+          type: 'currency',
+        },
       ]}
     />
   )

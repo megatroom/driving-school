@@ -45,7 +45,7 @@ export default function PrivateLayout() {
 
   useEffect(() => {
     if (authStatus === AuthStatus.unauthenticated) {
-      navigate('/')
+      navigate('/auth/login')
     }
   }, [authStatus, navigate])
 
