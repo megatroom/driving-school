@@ -93,6 +93,7 @@ export default function AppDrawer({ open, onClose }: Props) {
                 ...page,
                 onClick: () => {
                   navigate(getRoutePath(group.id, page.id))
+                  onClose()
                 },
               }
             })}

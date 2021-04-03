@@ -62,6 +62,7 @@ export interface Pagination {
   page: number
   perPage: number
   order: string
+  search?: string
 }
 
 export interface ResponseListData<T> {

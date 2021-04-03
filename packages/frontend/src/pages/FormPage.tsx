@@ -109,9 +109,11 @@ const FormPage: FC<Props> = ({
             <Alert severity="warning">
               <AlertTitle>Atenção</AlertTitle>
               <ul>
-                {Object.values(validationError).map((error: any) => (
-                  <li>{error.message}</li>
-                ))}
+                {Object.entries(validationError).map(
+                  ([key, error]: Array<any>) => (
+                    <li key={`warn-validation-${key}`}>{error.message}</li>
+                  )
+                )}
               </ul>
             </Alert>
           )}

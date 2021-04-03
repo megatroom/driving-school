@@ -2,10 +2,7 @@ import { Controller } from 'react-hook-form'
 import { fade, withStyles, makeStyles } from '@material-ui/core/styles'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
-import InputBase, {
-  InputBaseComponentProps,
-  InputBaseProps,
-} from '@material-ui/core/InputBase'
+import InputBase, { InputBaseProps } from '@material-ui/core/InputBase'
 import FormHelperText from '@material-ui/core/FormHelperText'
 
 const CustomInput = withStyles((theme) => ({
@@ -46,7 +43,8 @@ export interface TextFieldProps extends InputBaseProps {
   control: any
   label: string
   id: string
-  inputComponent?: React.ElementType<InputBaseComponentProps>
+  inputComponent?: any
+  required?: boolean
 }
 
 export default function TextField({
@@ -56,6 +54,7 @@ export default function TextField({
   id,
   inputComponent,
   defaultValue,
+  required,
   ...rest
 }: TextFieldProps) {
   const classes = useStyles()
@@ -65,12 +64,12 @@ export default function TextField({
   return (
     <FormControl error={hasError} className={classes.control} fullWidth>
       <InputLabel className={classes.label} htmlFor={id} shrink>
-        {label}
+        {label + (required ? ' *' : '')}
       </InputLabel>
       <Controller
         name={id}
         control={control}
-        defaultValue={defaultValue}
+        defaultValue={defaultValue || ''}
         render={({ onChange, value }) => (
           <CustomInput
             inputComponent={inputComponent}

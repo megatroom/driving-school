@@ -1,15 +1,19 @@
 import { useNavigate } from 'react-router-dom'
 
-import { postCarType, getCarType, CarType, putCarType } from 'services/api/cars'
+import {
+  postEmployeeRole,
+  getEmployeeRole,
+  EmployeeRole,
+  putEmployeeRole,
+} from 'services/api/employees'
 import useCustomForm from 'hooks/useCustomForm'
 import FormPage from 'pages/FormPage'
 import TextField from 'atoms/form/TextField'
-import MoneyField from 'atoms/form/MoneyField'
 
-export default function CarTypeForm() {
+export default function EmployeeRoleForm() {
   const navigate = useNavigate()
   const goBack = () => {
-    navigate('/cars/types')
+    navigate('/employees/roles')
   }
   const {
     handleSubmit,
@@ -19,19 +23,19 @@ export default function CarTypeForm() {
     customError,
     control,
     model,
-  } = useCustomForm<CarType>({
-    getModel: getCarType,
-    putModel: putCarType,
-    postModel: postCarType,
+  } = useCustomForm<EmployeeRole>({
+    getModel: getEmployeeRole,
+    putModel: putEmployeeRole,
+    postModel: postEmployeeRole,
     onSuccess: goBack,
-    entityName: 'Tipo de Carro',
+    entityName: 'Função',
   })
 
   return (
     <FormPage
       onSubmit={handleSubmit}
       onCancel={goBack}
-      title="Tipo de carro"
+      title="Função"
       isLoading={isLoading}
       validationError={validationError}
       customError={customError}
@@ -43,15 +47,6 @@ export default function CarTypeForm() {
         disabled={isPosting}
         id="description"
         label="Descrição"
-        required
-      />
-      <MoneyField
-        error={validationError?.commission}
-        defaultValue={model?.commission}
-        control={control}
-        disabled={isPosting}
-        id="commission"
-        label="Comissão"
         required
       />
     </FormPage>

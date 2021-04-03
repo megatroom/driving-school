@@ -9,6 +9,7 @@ interface Props<T> {
   putModel: (id: number, payload: any) => Promise<T>
   postModel: (payload: any) => Promise<T>
   onSuccess: () => void
+  entityName: string
 }
 
 export default function useCustomForm<T>({
@@ -16,6 +17,7 @@ export default function useCustomForm<T>({
   putModel,
   postModel,
   onSuccess,
+  entityName,
 }: Props<T>) {
   const queryClient = useQueryClient()
   const { control, handleSubmit } = useForm()
@@ -55,7 +57,7 @@ export default function useCustomForm<T>({
         queryClient.invalidateQueries('car-types')
         togglePosting(false)
         enqueueSnackbar(
-          `Tipo de Carro ${id ? 'alterado' : 'cadastrado'} com sucesso`,
+          `${entityName} ${id ? 'alterado' : 'cadastrado'} com sucesso`,
           { variant: 'success' }
         )
         onSuccess()

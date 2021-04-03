@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import clsx from 'clsx'
 
 import AppBar from 'molecules/AppBar'
@@ -26,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
     marginLeft: 0,
+  },
+  loading: {
+    textAlign: 'center',
   },
 }))
 
@@ -59,7 +63,15 @@ export default function PrivateLayout() {
         })}
       >
         <DrawerHeader />
-        <Outlet />
+        <Suspense
+          fallback={
+            <div className={classes.loading}>
+              <CircularProgress color="secondary" />
+            </div>
+          }
+        >
+          <Outlet />
+        </Suspense>
       </main>
     </div>
   )

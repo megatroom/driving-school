@@ -14,7 +14,9 @@ interface Props {
   onDeleteClick: (id: number) => Promise<any>
   loadData: (pagination: Pagination) => Promise<ResLoadData>
   id: string
+  title: string
   primaryTextKey: string
+  defaultOrder: string
   columns: Column[]
 }
 
@@ -23,14 +25,16 @@ export default function ListPage({
   onDeleteClick,
   loadData,
   id,
+  title,
   primaryTextKey,
+  defaultOrder,
   columns,
 }: Props) {
   const queryClient = useQueryClient()
   const [pagination, setPagination] = useState({
     page: 1,
     perPage: 10,
-    order: 'description',
+    order: defaultOrder,
   })
 
   const { isLoading, error, data } = useQuery<ResLoadData, Error>(
@@ -49,7 +53,7 @@ export default function ListPage({
   return (
     <Container maxWidth="md">
       <DataTable
-        title="Tipos de carro"
+        title={title}
         primaryTextKey={primaryTextKey}
         columns={columns}
         total={data?.total || 0}

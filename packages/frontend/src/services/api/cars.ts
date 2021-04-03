@@ -1,14 +1,29 @@
 import client, { Pagination, ResponseListData } from './client'
 
-export interface CarType {
-  id: number
+export interface CarTypePayload {
   description: string
   commission: number
 }
 
-export interface CarTypePayload {
+export interface CarType extends CarTypePayload {
+  id: number
+}
+
+export interface CarPayload {
+  carTypeId: number
+  fixedEmployeeId?: number
   description: string
-  commission: number
+  licensePlate: string
+  year: number
+  modelYear: number
+  purchaseDate: string
+  saleDate?: string
+}
+
+export interface Car extends CarPayload {
+  id: number
+  carTypeDescription: string
+  fixedEmployeeName: string
 }
 
 export const getCarTypes = ({
@@ -34,3 +49,24 @@ export const putCarType = (
 
 export const deleteCarType = (id: number): Promise<any> =>
   client.delete(`/cars/types/${id}`).then(() => {})
+
+export const getCars = ({
+  page,
+  perPage,
+  order,
+}: Pagination): Promise<ResponseListData<Car>> =>
+  client
+    .get(`/cars?page=${page}&perPage=${perPage}&order=${order}`)
+    .then(({ data }) => data)
+
+export const getCar = (id: number): Promise<Car> =>
+  client.get(`/cars/${id}`).then(({ data }) => data)
+
+export const postCar = (payload: CarPayload): Promise<Car> =>
+  client.post('/cars/', payload).then(({ data }) => data)
+
+export const putCar = (id: number, payload: CarPayload): Promise<Car> =>
+  client.put(`/cars/${id}`, payload).then(({ data }) => data)
+
+export const deleteCar = (id: number): Promise<any> =>
+  client.delete(`/cars/${id}`).then(() => {})

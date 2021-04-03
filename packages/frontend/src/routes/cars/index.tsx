@@ -1,34 +1,37 @@
 import { useNavigate } from 'react-router-dom'
-import { getCarTypes, deleteCarType } from 'services/api/cars'
+import { getCars, deleteCar } from 'services/api/cars'
 import ListPage from 'pages/ListPage'
 
-export default function CarTypeList() {
+export default function CarList() {
   const navigate = useNavigate()
 
   return (
     <ListPage
-      id="car-types"
-      title="Tipos de carro"
-      loadData={getCarTypes}
+      id="cars"
+      title="Carros"
+      loadData={getCars}
       onNewClick={() => {
-        navigate(`/cars/types/new`)
+        navigate(`/cars/new`)
       }}
-      onDeleteClick={deleteCarType}
+      onDeleteClick={deleteCar}
       primaryTextKey="description"
       defaultOrder="description"
       columns={[
         {
+          key: 'carTypeDescription',
+          label: 'Tipo',
+        },
+        {
           key: 'description',
           label: 'Descrição',
           onClick: (id) => {
-            navigate(`/cars/types/edit/${id}`)
+            navigate(`/cars/edit/${id}`)
           },
         },
         {
-          key: 'commission',
-          label: 'Comissão',
+          key: 'licensePlate',
+          label: 'Placa',
           align: 'right',
-          type: 'currency',
         },
       ]}
     />

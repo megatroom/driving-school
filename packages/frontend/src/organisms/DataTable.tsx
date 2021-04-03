@@ -17,8 +17,10 @@ import Skeleton from '@material-ui/lab/Skeleton'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
+import Alert from '@material-ui/lab/Alert'
+import AlertTitle from '@material-ui/lab/AlertTitle'
 
-import { formatNumberToString } from 'formatters/NumberFormatter'
+import { formatNumberToString } from 'formatters/number'
 import ConfirmDialog from 'atoms/ConfirmDialog'
 
 const useStyles = makeStyles((theme) => ({
@@ -123,7 +125,14 @@ export default function DataTable({
   const newRows = isLoading ? getEmptyRows(rowsPerPage) : rows
   const hasActions = !!onDeleteClick
 
-  if (error) return <p>'An error has occurred: ' + error.message</p>
+  if (error) {
+    return (
+      <Alert severity="error">
+        <AlertTitle>{`${title} - Erro`}</AlertTitle>
+        {error.message}
+      </Alert>
+    )
+  }
 
   return (
     <Paper className={classes.paper}>
