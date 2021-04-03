@@ -11,7 +11,7 @@ export default abstract class BaseModel {
     this.tableName = tableName
   }
 
-  abstract castPayloadToModel(model: any): any
+  abstract castPayloadToModel(payload: any): any
   abstract findById(id: number): any
 
   async create(model: any) {

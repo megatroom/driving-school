@@ -8,21 +8,21 @@ import {
 import { idSchema } from '../../schemas/core'
 import authenticate from '../../middlewares/authenticate'
 import validate from '../../middlewares/validate'
-import Car from '../../models/Car'
+import Employee from '../../models/Employee'
 
 const router = Router()
 
 router.get(
-  '/cars',
+  '/employees',
   authenticate(),
   validate({ query: paginationQuerySchema() }),
   async (req, res, next) => {
     try {
-      const { perPage, offset, order } = formatRequestPagination(req)
+      const { perPage, offset, order, search } = formatRequestPagination(req)
 
-      const model = new Car()
+      const model = new Employee()
       const total = await model.count()
-      const data = await model.findAll(perPage, offset, order)
+      const data = await model.findAll(perPage, offset, order, search)
 
       res.json({ data, total })
     } catch (error) {
@@ -32,14 +32,14 @@ router.get(
 )
 
 router.post(
-  '/cars',
+  '/employees',
   validate({
-    labels: Car.labelsSchema(),
-    body: Car.postSchema(),
+    labels: Employee.labelsSchema(),
+    body: Employee.postSchema(),
   }),
   async (req, res, next) => {
     try {
-      const model = new Car()
+      const model = new Employee()
       const entity = await model.create(req.body)
 
       res.json(entity)
@@ -50,13 +50,13 @@ router.post(
 )
 
 router.get(
-  '/cars/:id',
+  '/employees/:id',
   validate({ params: idSchema() }),
   async (req, res, next) => {
     try {
       const id = parseInt(req.params.id, 10)
 
-      const model = new Car()
+      const model = new Employee()
       const entity = await model.findById(id)
 
       if (entity) {
@@ -71,17 +71,17 @@ router.get(
 )
 
 router.put(
-  '/cars/:id',
+  '/employees/:id',
   validate({
-    labels: Car.labelsSchema(),
+    labels: Employee.labelsSchema(),
     params: idSchema(),
-    body: Car.postSchema(),
+    body: Employee.postSchema(),
   }),
   async (req, res, next) => {
     try {
       const id = parseInt(req.params.id, 10)
 
-      const model = new Car()
+      const model = new Employee()
       const car = await model.update(id, req.body)
 
       res.json(car)
@@ -92,7 +92,7 @@ router.put(
 )
 
 router.delete(
-  '/cars/:id',
+  '/employees/:id',
   validate({
     params: idSchema(),
   }),
@@ -100,7 +100,7 @@ router.delete(
     try {
       const id = parseInt(req.params.id, 10)
 
-      const model = new Car()
+      const model = new Employee()
       await model.delete(id)
 
       res.json({})

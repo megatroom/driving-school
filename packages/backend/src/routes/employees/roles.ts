@@ -8,21 +8,21 @@ import {
 import { idSchema } from '../../schemas/core'
 import authenticate from '../../middlewares/authenticate'
 import validate from '../../middlewares/validate'
-import Car from '../../models/Car'
+import EmployeeRole from '../../models/EmployeeRole'
 
 const router = Router()
 
 router.get(
-  '/cars',
+  '/employees/roles',
   authenticate(),
   validate({ query: paginationQuerySchema() }),
   async (req, res, next) => {
     try {
-      const { perPage, offset, order } = formatRequestPagination(req)
+      const { perPage, offset, order, search } = formatRequestPagination(req)
 
-      const model = new Car()
+      const model = new EmployeeRole()
       const total = await model.count()
-      const data = await model.findAll(perPage, offset, order)
+      const data = await model.findAll(perPage, offset, order, search)
 
       res.json({ data, total })
     } catch (error) {
@@ -32,17 +32,17 @@ router.get(
 )
 
 router.post(
-  '/cars',
+  '/employees/roles',
   validate({
-    labels: Car.labelsSchema(),
-    body: Car.postSchema(),
+    labels: EmployeeRole.labelsSchema(),
+    body: EmployeeRole.postSchema(),
   }),
   async (req, res, next) => {
     try {
-      const model = new Car()
-      const entity = await model.create(req.body)
+      const model = new EmployeeRole()
+      const roles = await model.create(req.body)
 
-      res.json(entity)
+      res.json(roles)
     } catch (error) {
       next(error)
     }
@@ -50,17 +50,17 @@ router.post(
 )
 
 router.get(
-  '/cars/:id',
+  '/employees/roles/:id',
   validate({ params: idSchema() }),
   async (req, res, next) => {
     try {
       const id = parseInt(req.params.id, 10)
 
-      const model = new Car()
-      const entity = await model.findById(id)
+      const model = new EmployeeRole()
+      const roles = await model.findById(id)
 
-      if (entity) {
-        res.json(entity)
+      if (roles) {
+        res.json(roles)
       } else {
         res.status(404).json({})
       }
@@ -71,20 +71,20 @@ router.get(
 )
 
 router.put(
-  '/cars/:id',
+  '/employees/roles/:id',
   validate({
-    labels: Car.labelsSchema(),
+    labels: EmployeeRole.labelsSchema(),
     params: idSchema(),
-    body: Car.postSchema(),
+    body: EmployeeRole.postSchema(),
   }),
   async (req, res, next) => {
     try {
       const id = parseInt(req.params.id, 10)
 
-      const model = new Car()
-      const car = await model.update(id, req.body)
+      const model = new EmployeeRole()
+      const roles = await model.update(id, req.body)
 
-      res.json(car)
+      res.json(roles)
     } catch (error) {
       next(error)
     }
@@ -92,7 +92,7 @@ router.put(
 )
 
 router.delete(
-  '/cars/:id',
+  '/employees/roles/:id',
   validate({
     params: idSchema(),
   }),
@@ -100,7 +100,7 @@ router.delete(
     try {
       const id = parseInt(req.params.id, 10)
 
-      const model = new Car()
+      const model = new EmployeeRole()
       await model.delete(id)
 
       res.json({})

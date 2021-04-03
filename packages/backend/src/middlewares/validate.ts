@@ -6,9 +6,9 @@ const translateErrorMessage = (detail: ValidationErrorItem, label: string) => {
     case 'any.required':
       return `"${label}" é obrigatório`
     case 'string.empty':
-      return `"${label}" não pode ficar em branco`
     case 'number.base':
-      return `"${label}" deve ser um número`
+    case 'date.base':
+      return `"${label}" não pode ficar em branco`
     default:
       return detail.message
   }
