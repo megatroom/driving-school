@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     width: '100%',
     marginBottom: theme.spacing(2),
+    overflow: 'hidden',
   },
   header: {
     borderBottom: '1px solid rgba(0, 0, 0, 0.12)',

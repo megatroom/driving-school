@@ -30,9 +30,14 @@ export const getCarTypes = ({
   page,
   perPage,
   order,
+  search,
 }: Pagination): Promise<ResponseListData<CarType>> =>
   client
-    .get(`/cars/types?page=${page}&perPage=${perPage}&order=${order}`)
+    .get(
+      `/cars/types?page=${page}&perPage=${perPage}&order=${order}${
+        search ? `&search=${search}` : ''
+      }`
+    )
     .then(({ data }) => data)
 
 export const getCarType = (id: number): Promise<CarType> =>

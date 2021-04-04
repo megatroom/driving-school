@@ -86,6 +86,11 @@ export default function ListPage({
             })
           }
         }}
+        onSearch={(text) => {
+          handlePaginationChange({
+            search: text,
+          })
+        }}
       />
     </Container>
   )
