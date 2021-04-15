@@ -8,6 +8,7 @@ import {
 } from 'react'
 import { User, Menu, getUserProfile } from 'services/api/users'
 import { logout } from 'services/api/auth'
+import { filterMenuWithRoutes } from 'routes'
 
 export enum AuthStatus {
   idle,
@@ -36,7 +37,8 @@ const reducer: Reducer<State, any> = (state, action) => {
     case 'set-current-user':
       return {
         ...state,
-        ...action.data,
+        user: action.data.user,
+        menu: filterMenuWithRoutes(action.data.menu),
         authStatus: AuthStatus.authenticated,
       }
     case 'logout':

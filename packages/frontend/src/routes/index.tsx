@@ -1,6 +1,7 @@
 import { lazy } from 'react'
 import { Routes, Route } from 'react-router-dom'
 
+import { Menu } from 'services/api/users'
 import PrivateLayout from 'layouts/PrivateLayout'
 import AuthLayout from 'layouts/AuthLayout'
 
@@ -36,6 +37,21 @@ export function getRoutePath(groupCode: number, pageCode: number) {
   }
 
   return path
+}
+
+export function filterMenuWithRoutes(menu: Menu[]) {
+  const newMenu = menu.filter((group) => {
+    return !!PageGroupRecord?.[group.code]
+  })
+
+  return newMenu.map((group) => {
+    return {
+      ...group,
+      pages: group.pages.filter(
+        (page) => !!PageGroupRecord?.[group.code]?.[page.code]
+      ),
+    }
+  })
 }
 
 export default function AppRoutes() {
