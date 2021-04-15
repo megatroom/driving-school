@@ -47,6 +47,10 @@ export default class Car extends BaseModel {
     }
   }
 
+  async canDelete(id: number) {
+    return null
+  }
+
   findById(id: number) {
     return this.connection
       .select(
@@ -122,5 +126,19 @@ export default class Car extends BaseModel {
       .orderBy(orderBy)
       .limit(limit)
       .offset(offset)
+  }
+
+  countByCarTypeId(carTypeId: number) {
+    return this.connection(this.tableName)
+      .count('id as total')
+      .where({ idtipocarro: carTypeId })
+      .then((models) => models[0].total)
+  }
+
+  countByFixedEmployeeId(fixedEmployeeId: number) {
+    return this.connection(this.tableName)
+      .count('id as total')
+      .where({ idfunfixo: fixedEmployeeId })
+      .then((models) => models[0].total)
   }
 }

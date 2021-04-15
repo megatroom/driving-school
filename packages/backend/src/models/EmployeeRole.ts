@@ -1,5 +1,7 @@
 import joi from 'joi'
+import { pluralize } from '../formatters/string'
 import BaseModel from './BaseModel'
+import Employee from './Employee'
 
 export default class EmployeeRole extends BaseModel {
   constructor() {
@@ -22,6 +24,18 @@ export default class EmployeeRole extends BaseModel {
     return {
       descricao: payload.description,
     }
+  }
+
+  async canDelete(id: number) {
+    const employeeCount = await new Employee().countByRoleId(id)
+    if (employeeCount > 0) {
+      return `Função usada em ${pluralize(
+        employeeCount as number,
+        'funcionário'
+      )}.`
+    }
+
+    return null
   }
 
   findById(id: number) {

@@ -94,6 +94,10 @@ export default class People extends BaseModel {
     }
   }
 
+  async canDelete(id: number) {
+    return null
+  }
+
   findById(id: number) {
     return this.connection
       .select(

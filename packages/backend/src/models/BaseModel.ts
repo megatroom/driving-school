@@ -1,5 +1,6 @@
 import { Knex } from 'knex'
 import { getDbConnection } from '../app/database'
+import NotFoundError from '../errors/NotFoundError'
 import BadRequestError from '../errors/BadRequestError'
 
 export default abstract class BaseModel {
@@ -13,6 +14,7 @@ export default abstract class BaseModel {
 
   abstract castPayloadToModel(payload: any): any
   abstract findById(id: number): any
+  abstract canDelete(id: number): Promise<string | null>
 
   async create(payload: any) {
     const ids = await this.connection
@@ -28,13 +30,18 @@ export default abstract class BaseModel {
       .update(this.castPayloadToModel(payload))
 
     if (affectedCount === 0) {
-      throw new BadRequestError('Tipo de carro não encontrado')
+      throw new NotFoundError('Tipo de carro não encontrado')
     }
 
     return this.findById(id)
   }
 
-  delete(id: number) {
+  async delete(id: number) {
+    const error = await this.canDelete(id)
+    if (error) {
+      throw new BadRequestError(error)
+    }
+
     return this.connection(this.tableName).where({ id }).del()
   }
 

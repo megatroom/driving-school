@@ -1,5 +1,7 @@
 import joi from 'joi'
+import { pluralize } from '../formatters/string'
 import BaseModel from './BaseModel'
+import Car from './Car'
 import People from './People'
 
 export default class Employee extends BaseModel {
@@ -68,6 +70,15 @@ export default class Employee extends BaseModel {
       status: payload.status,
       idfuncao: payload.employeeRoleId,
     }
+  }
+
+  async canDelete(id: number) {
+    const carCount = await new Car().countByFixedEmployeeId(id)
+    if (carCount > 0) {
+      return `Funcionário usado em ${pluralize(carCount as number, 'carro')}.`
+    }
+
+    return null
   }
 
   findById(id: number) {
@@ -144,5 +155,12 @@ export default class Employee extends BaseModel {
     }
 
     return newConnection.orderBy(orderBy).limit(limit).offset(offset)
+  }
+
+  countByRoleId(employeeRoleId: number) {
+    return this.connection(this.tableName)
+      .count('id as total')
+      .where({ idfuncao: employeeRoleId })
+      .then((models) => models[0].total)
   }
 }

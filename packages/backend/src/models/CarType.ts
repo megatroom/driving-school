@@ -1,6 +1,8 @@
 import joi from 'joi'
-import BaseModel from './BaseModel'
 
+import { pluralize } from '../formatters/string'
+import BaseModel from './BaseModel'
+import Car from './Car'
 export default class CarType extends BaseModel {
   constructor() {
     super('tipocarros')
@@ -25,6 +27,15 @@ export default class CarType extends BaseModel {
       descricao: payload.description,
       comissao: payload.commission,
     }
+  }
+
+  async canDelete(id: number) {
+    const carCount = await new Car().countByCarTypeId(id)
+    if (carCount > 0) {
+      return `Tipo usado em ${pluralize(carCount as number, 'carro')}.`
+    }
+
+    return null
   }
 
   findAll(

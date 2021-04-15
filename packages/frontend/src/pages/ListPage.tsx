@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useQueryClient, useQuery } from 'react-query'
+import { useSnackbar } from 'notistack'
 import Container from '@material-ui/core/Container'
 
 import DataTable, { Column } from 'organisms/DataTable'
@@ -30,6 +31,7 @@ export default function ListPage({
   defaultOrder,
   columns,
 }: Props) {
+  const { enqueueSnackbar } = useSnackbar()
   const queryClient = useQueryClient()
   const [pagination, setPagination] = useState({
     page: 1,
@@ -75,9 +77,19 @@ export default function ListPage({
         }}
         onNewClick={onNewClick}
         onDeleteClick={(deleteId) => {
-          onDeleteClick(deleteId).then(() => {
-            queryClient.invalidateQueries(id)
-          })
+          onDeleteClick(deleteId)
+            .then(() => {
+              queryClient.invalidateQueries(id)
+              enqueueSnackbar(`Exclusão efetuada com sucesso.`, {
+                variant: 'success',
+              })
+            })
+            .catch((err) => {
+              const message = err?.response?.data?.message || ''
+              enqueueSnackbar(`Erro ao excluir. ${message}`, {
+                variant: 'error',
+              })
+            })
         }}
         onOrderChange={(key) => {
           if (key !== pagination.order) {
