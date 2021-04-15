@@ -48,6 +48,7 @@ export default function EmployeeRoleForm() {
         id="description"
         label="Descrição"
         required
+        autoFocus
       />
     </FormPage>
   )

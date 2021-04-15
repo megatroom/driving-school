@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
+import Divider from '@material-ui/core/Divider'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 
 import config from 'config'
@@ -81,11 +82,18 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface Props {
-  menuOpen: boolean
+  onLogout: () => void
   onMenuClick: () => void
+  menuOpen: boolean
+  displayName?: string
 }
 
-export default function AppBar({ menuOpen, onMenuClick }: Props) {
+export default function AppBar({
+  onLogout,
+  onMenuClick,
+  menuOpen,
+  displayName,
+}: Props) {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
@@ -110,8 +118,16 @@ export default function AppBar({ menuOpen, onMenuClick }: Props) {
       open={isMenuOpen}
       onClose={handleProfileMenuClose}
     >
-      <MenuItem onClick={handleProfileMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleProfileMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleProfileMenuClose}>{displayName}</MenuItem>
+      <Divider />
+      <MenuItem
+        onClick={() => {
+          handleProfileMenuClose()
+          onLogout()
+        }}
+      >
+        Logout
+      </MenuItem>
     </Menu>
   )
 

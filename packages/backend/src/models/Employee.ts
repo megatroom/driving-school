@@ -11,22 +11,62 @@ export default class Employee extends BaseModel {
     return {
       ...People.postSchema(),
       employeeRoleId: joi.number().required(),
-      status: joi.string().valid('A', 'I'),
+      status: joi.string().valid('A', 'I').required(),
     }
   }
 
   static labelsSchema() {
     return {
       ...People.labelsSchema(),
+      employeeRoleId: 'Função',
       enrollment: 'Matrícula',
       status: 'Status',
     }
   }
 
+  async getEnrollment() {
+    const models = await this.connection(this.tableName).max(
+      'matricula as total'
+    )
+    const maxEnrollment = models.length ? parseInt(models[0].total, 10) : 0
+    return `${maxEnrollment + 1}`.padStart(4, '0')
+  }
+
+  async create(payload: any) {
+    const enrollment = await this.getEnrollment()
+
+    const people = await new People().create(payload)
+
+    const model = {
+      ...this.castPayloadToModel(payload),
+      matricula: enrollment,
+      idpessoa: people.id,
+    }
+
+    const ids = await this.connection.insert(model).into(this.tableName)
+
+    return this.findById(ids[0])
+  }
+
+  async update(id: number, payload: any) {
+    const { peopleId } = await this.connection
+      .first('idpessoa as peopleId')
+      .from(this.tableName)
+      .where({ id })
+
+    await new People().update(peopleId, payload)
+
+    await this.connection(this.tableName)
+      .where({ id })
+      .update(this.castPayloadToModel(payload))
+
+    return this.findById(id)
+  }
+
   castPayloadToModel(payload: any) {
     return {
-      ...new People().castPayloadToModel(payload),
       status: payload.status,
+      idfuncao: payload.employeeRoleId,
     }
   }
 
@@ -43,7 +83,7 @@ export default class Employee extends BaseModel {
         'p.rg',
         'p.cpf',
         'p.endereco as address',
-        'p.cep as postalCode',
+        'p.cep',
         'p.bairro as neighborhood',
         'p.cidade as city',
         'p.estado as state',
@@ -59,7 +99,7 @@ export default class Employee extends BaseModel {
       .from({ f: this.tableName })
       .innerJoin({ p: 'pessoas' }, 'f.idpessoa', 'p.id')
       .innerJoin({ c: 'funcoes' }, 'f.idfuncao', 'c.id')
-      .where({ id })
+      .where({ 'f.id': id })
       .then((models) => (models.length ? models[0] : null))
   }
 

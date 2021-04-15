@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 
 import { postCar, getCar, Car, putCar, getCarTypes } from 'services/api/cars'
-import { formatDateToPayload } from 'formatters/date'
+import { getEmployees } from 'services/api/employees'
 import useCustomForm from 'hooks/useCustomForm'
 import FormPage from 'pages/FormPage'
 import GridRow from 'atoms/form/GridRow'
@@ -10,20 +10,7 @@ import ForeignField from 'atoms/form/ForeignField'
 import TextField from 'atoms/form/TextField'
 import YearField from 'atoms/form/YearField'
 import DateField from 'atoms/form/DateField'
-
-const formatModelToPayload = ({
-  carTypeId,
-  fixedEmployeeId,
-  purchaseDate,
-  saleDate,
-  ...rest
-}: any) => ({
-  ...rest,
-  carTypeId: carTypeId.value,
-  fixedEmployeeId: fixedEmployeeId.value,
-  purchaseDate: formatDateToPayload(purchaseDate),
-  saleDate: formatDateToPayload(saleDate),
-})
+import LicensePlateField from 'atoms/form/LicensePlateField'
 
 export default function CarForm() {
   const navigate = useNavigate()
@@ -40,14 +27,14 @@ export default function CarForm() {
     model,
   } = useCustomForm<Car>({
     getModel: getCar,
-    putModel: (id, model) => {
-      return putCar(id, formatModelToPayload(model))
-    },
-    postModel: (model) => {
-      return postCar(formatModelToPayload(model))
-    },
+    putModel: putCar,
+    postModel: postCar,
     onSuccess: goBack,
     entityName: 'Carro',
+    adapters: {
+      foreignKeys: ['carTypeId', 'fixedEmployeeId'],
+      dateFields: ['purchaseDate', 'saleDate'],
+    },
   })
 
   return (
@@ -63,28 +50,28 @@ export default function CarForm() {
         loadData={getCarTypes}
         fieldKey="description"
         error={validationError?.carTypeId}
-        defaultValue={{
-          label: model?.carTypeDescription || '',
-          value: model?.carTypeId || -1,
-        }}
+        defaultLabel={model?.carTypeDescription}
+        defaultValue={model?.carTypeId}
         control={control}
         disabled={isPosting}
         id="carTypeId"
         label="Tipo"
         required
+        autoFocus
       />
       <TextField
         error={validationError?.description}
         defaultValue={model?.description}
         control={control}
         disabled={isPosting}
+        maxLength={100}
         id="description"
         label="Descrição"
         required
       />
       <GridRow>
         <GridCell column={4}>
-          <TextField
+          <LicensePlateField
             error={validationError?.licensePlate}
             defaultValue={model?.licensePlate}
             control={control}
@@ -102,7 +89,6 @@ export default function CarForm() {
             disabled={isPosting}
             id="year"
             label="Ano Fabricação"
-            required
           />
         </GridCell>
         <GridCell column={4}>
@@ -113,7 +99,6 @@ export default function CarForm() {
             disabled={isPosting}
             id="modelYear"
             label="Ano Modelo"
-            required
           />
         </GridCell>
       </GridRow>
@@ -126,7 +111,6 @@ export default function CarForm() {
             disabled={isPosting}
             id="purchaseDate"
             label="Data de compra"
-            required
           />
         </GridCell>
         <GridCell column={4}>
@@ -141,13 +125,11 @@ export default function CarForm() {
         </GridCell>
       </GridRow>
       <ForeignField
-        loadData={getCarTypes}
-        fieldKey="description"
+        loadData={getEmployees}
+        fieldKey="name"
         error={validationError?.fixedEmployeeId}
-        defaultValue={{
-          label: model?.fixedEmployeeName || '',
-          value: model?.fixedEmployeeId || -1,
-        }}
+        defaultLabel={model?.fixedEmployeeName}
+        defaultValue={model?.fixedEmployeeId}
         control={control}
         disabled={isPosting}
         id="fixedEmployeeId"

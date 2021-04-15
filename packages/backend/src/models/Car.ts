@@ -1,6 +1,7 @@
 import joi from 'joi'
 import BaseModel from './BaseModel'
 import { requiredForeignKey, optionalForeignKey } from '../validators/fields'
+import { dateStringToObject } from '../formatters/date'
 
 export default class Car extends BaseModel {
   constructor() {
@@ -13,9 +14,9 @@ export default class Car extends BaseModel {
       fixedEmployeeId: joi.number().custom(optionalForeignKey).allow(null),
       description: joi.string().required(),
       licensePlate: joi.string().required(),
-      year: joi.number().required(),
-      modelYear: joi.number().required(),
-      purchaseDate: joi.date().iso().required(),
+      year: joi.number().allow(null),
+      modelYear: joi.number().allow(null),
+      purchaseDate: joi.date().iso().allow(null),
       saleDate: joi.date().iso().allow(null),
     }
   }
@@ -33,16 +34,16 @@ export default class Car extends BaseModel {
     }
   }
 
-  castPayloadToModel(model: any) {
+  castPayloadToModel(payload: any) {
     return {
-      idtipocarro: model.carTypeId,
-      idfunfixo: model.fixedEmployeeId,
-      descricao: model.description,
-      placa: model.licensePlate,
-      ano: model.year,
-      anomodelo: model.modelYear,
-      datacompra: model.purchaseDate,
-      datavenda: model.saleDate,
+      idtipocarro: payload.carTypeId,
+      idfunfixo: payload.fixedEmployeeId,
+      descricao: payload.description,
+      placa: payload.licensePlate,
+      ano: payload.year,
+      anomodelo: payload.modelYear,
+      datacompra: dateStringToObject(payload.purchaseDate),
+      datavenda: dateStringToObject(payload.saleDate),
     }
   }
 
@@ -75,7 +76,12 @@ export default class Car extends BaseModel {
       })
   }
 
-  findAll(limit: number, offset: number, order: string[]) {
+  findAll(
+    limit: number,
+    offset: number,
+    order: string[],
+    search: string | undefined
+  ) {
     const orderBy = order.reduce((accumulator: string[], field: string) => {
       switch (field) {
         case 'carTypeDescription':
@@ -91,7 +97,7 @@ export default class Car extends BaseModel {
       }
     }, [])
 
-    return this.connection
+    const newConnection = this.connection
       .select(
         'c.id',
         'c.idtipocarro as carTypeId',
@@ -102,6 +108,14 @@ export default class Car extends BaseModel {
         'c.placa as licensePlate'
       )
       .from({ c: this.tableName })
+
+    if (search) {
+      newConnection
+        .where('c.descricao', 'like', `%${search}%`)
+        .orWhere('c.placa', 'like', `%${search}%`)
+    }
+
+    return newConnection
       .innerJoin({ t: 'tipocarros' }, 'c.idtipocarro', 't.id')
       .leftJoin({ f: 'funcionarios' }, 'c.idfunfixo', 'f.id')
       .leftJoin({ p: 'pessoas' }, 'f.idpessoa', 'p.id')

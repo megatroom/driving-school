@@ -37,7 +37,13 @@ export default function PrivateLayout() {
   const navigate = useNavigate()
   const classes = useStyles()
   const [open, setOpen] = useState(false)
-  const { authStatus } = useUser()
+  const { authStatus, logout, user } = useUser()
+
+  useEffect(() => {
+    if (authStatus === AuthStatus.unauthenticated) {
+      navigate('/auth/login')
+    }
+  }, [authStatus, navigate])
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -47,15 +53,14 @@ export default function PrivateLayout() {
     setOpen(false)
   }
 
-  useEffect(() => {
-    if (authStatus === AuthStatus.unauthenticated) {
-      navigate('/auth/login')
-    }
-  }, [authStatus, navigate])
-
   return (
     <div className={classes.root}>
-      <AppBar menuOpen={open} onMenuClick={handleDrawerOpen} />
+      <AppBar
+        onLogout={logout}
+        onMenuClick={handleDrawerOpen}
+        menuOpen={open}
+        displayName={user?.name || user?.login}
+      />
       <AppDrawer open={open} onClose={handleDrawerClose} />
       <main
         className={clsx(classes.content, {

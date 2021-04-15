@@ -5,10 +5,13 @@ const translateErrorMessage = (detail: ValidationErrorItem, label: string) => {
   switch (detail.type) {
     case 'any.required':
       return `"${label}" é obrigatório`
+    case 'string.base':
     case 'string.empty':
     case 'number.base':
     case 'date.base':
       return `"${label}" não pode ficar em branco`
+    case 'string.email':
+      return `"${label}" deve ser um email válido`
     default:
       return detail.message
   }

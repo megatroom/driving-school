@@ -1,6 +1,5 @@
 import MaskedInput from 'react-text-mask'
 
-import { formatPayloadDate } from 'formatters/date'
 import TextField, { TextFieldProps } from './TextField'
 
 interface TextMaskCustomProps {
@@ -14,19 +13,13 @@ function TextMaskCustom({ inputRef, ...other }: TextMaskCustomProps) {
       ref={(ref: any) => {
         inputRef(ref ? ref.inputElement : null)
       }}
-      mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
+      mask={[/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
       placeholderChar={'\u2000'}
       showMask
     />
   )
 }
 
-export default function DateField({ defaultValue, ...rest }: TextFieldProps) {
-  return (
-    <TextField
-      {...rest}
-      defaultValue={formatPayloadDate(defaultValue as string)}
-      inputComponent={TextMaskCustom}
-    />
-  )
+export default function CEPField(props: TextFieldProps) {
+  return <TextField {...props} inputComponent={TextMaskCustom} />
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Controller } from 'react-hook-form'
 import { fade, makeStyles } from '@material-ui/core/styles'
+import debounce from 'lodash.debounce'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -57,8 +58,10 @@ interface Props {
   label: string
   id: string
   disabled: boolean
-  defaultValue: unknown
+  defaultLabel?: string
+  defaultValue?: number
   required?: boolean
+  autoFocus?: boolean
 }
 
 export default function ForeignField({
@@ -69,54 +72,50 @@ export default function ForeignField({
   label,
   id,
   disabled,
+  defaultLabel,
   defaultValue,
   required,
+  autoFocus,
 }: Props) {
   const [open, setOpen] = useState(false)
   const [options, setOptions] = useState<Option[]>([])
+  const [inputValue, setInputValue] = useState('')
+  const [loading, setLoading] = useState(false)
   const classes = useStyles()
-  const loading = open && options.length === 0
   const hasError = !!error
 
   useEffect(() => {
-    let active = true
-
-    if (!loading) {
-      return undefined
-    }
-
+    setLoading(true)
     ;(async () => {
-      const { data } = await loadData({ page: 1, perPage: 5, order: fieldKey })
+      const { data } = await loadData({
+        page: 1,
+        perPage: 5,
+        order: fieldKey,
+        search: inputValue,
+      })
 
-      if (active) {
-        setOptions([
-          { label: '', value: '' },
-          ...(data.map((item: any) => ({
-            label: item[fieldKey],
-            value: item.id,
-          })) as Option[]),
-        ])
-      }
+      setLoading(false)
+      setOptions([
+        { label: '', value: -1 },
+        ...(data.map((item: any) => ({
+          label: item[fieldKey],
+          value: item.id,
+        })) as Option[]),
+      ])
     })()
-
-    return () => {
-      active = false
-    }
-  }, [loading, fieldKey, loadData])
-
-  useEffect(() => {
-    if (!open) {
-      setOptions([])
-    }
-  }, [open])
+  }, [inputValue, fieldKey, loadData])
 
   return (
     <Controller
       name={id}
       control={control}
-      defaultValue={defaultValue}
+      defaultValue={{
+        label: defaultLabel || '',
+        value: defaultValue || -1,
+      }}
       render={({ onChange, value }) => (
         <Autocomplete
+          noOptionsText="Não encontrado"
           id={id}
           style={{ width: 300 }}
           classes={{
@@ -136,6 +135,9 @@ export default function ForeignField({
           onChange={(event, newValue) => {
             onChange(newValue)
           }}
+          onInputChange={debounce((event, newInputValue) => {
+            setInputValue(newInputValue)
+          }, 400)}
           value={value}
           disabled={disabled}
           options={options}
@@ -157,6 +159,7 @@ export default function ForeignField({
                   </>
                 ),
                 disableUnderline: true,
+                autoFocus,
               }}
               InputLabelProps={{
                 ...params.InputLabelProps,

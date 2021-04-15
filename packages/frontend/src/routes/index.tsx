@@ -12,8 +12,9 @@ const CarsTypesForm = lazy(() => import('./cars/types/form'))
 const CarsTypes = lazy(() => import('./cars/types'))
 const CarsForm = lazy(() => import('./cars/form'))
 const Cars = lazy(() => import('./cars'))
-const EmployeesRoles = lazy(() => import('./employees/roles'))
 const EmployeesRoleForm = lazy(() => import('./employees/roles/form'))
+const EmployeesRoles = lazy(() => import('./employees/roles'))
+const EmployeesForm = lazy(() => import('./employees/form'))
 const Employees = lazy(() => import('./employees'))
 
 type PageRecord = Record<number, string>
@@ -57,6 +58,8 @@ export default function AppRoutes() {
           element={<EmployeesRoleForm />}
         />
         <Route path="/employees/roles" element={<EmployeesRoles />} />
+        <Route path="/employees/new" element={<EmployeesForm />} />
+        <Route path="/employees/edit/:id" element={<EmployeesForm />} />
         <Route path="/employees" element={<Employees />} />
       </Route>
       <Route path="*" element={<NotFound />} />

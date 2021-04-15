@@ -1,5 +1,6 @@
 import joi from 'joi'
 import BaseModel from './BaseModel'
+import { dateStringToObject } from '../formatters/date'
 
 export default class People extends BaseModel {
   constructor() {
@@ -17,7 +18,7 @@ export default class People extends BaseModel {
       cpf: 'CPF',
       workCard: 'Cateira de Trabalho',
       address: 'Endereço',
-      postalCode: 'CEP',
+      cep: 'CEP',
       neighborhood: 'Bairro',
       city: 'Cidade',
       state: 'Estado',
@@ -37,35 +38,38 @@ export default class People extends BaseModel {
   static postSchema() {
     return {
       name: joi.string().required(),
-      dateOfBirth: joi.date(),
-      gender: joi.string().valid('M', 'F'),
-      rg: joi.string(),
-      rgPrintDate: joi.date(),
-      rgEmittingOrgan: joi.string(),
-      cpf: joi.string(),
-      workCard: joi.string(),
-      address: joi.string(),
-      postalCode: joi.string(),
-      neighborhood: joi.string(),
-      city: joi.string(),
-      state: joi.string(),
-      phone: joi.string(),
-      phoneContact: joi.string(),
-      phone2: joi.string(),
-      phone2Contact: joi.string(),
-      mobile: joi.string(),
-      mobile2: joi.string(),
-      mobile3: joi.string(),
-      email: joi.string(),
-      mother: joi.string(),
-      father: joi.string(),
+      dateOfBirth: joi.date().allow(null),
+      gender: joi.string().valid('M', 'F').allow(null),
+      rg: joi.string().allow(null),
+      rgPrintDate: joi.date().allow(null),
+      rgEmittingOrgan: joi.string().allow(null),
+      cpf: joi.string().allow(null),
+      workCard: joi.string().allow(null),
+      address: joi.string().allow(null),
+      cep: joi.string().allow(null),
+      neighborhood: joi.string().allow(null),
+      city: joi.string().allow(null),
+      state: joi.string().allow(null),
+      phone: joi.string().allow(null),
+      phoneContact: joi.string().allow(null),
+      phone2: joi.string().allow(null),
+      phone2Contact: joi.string().allow(null),
+      mobile: joi.string().allow(null),
+      mobile2: joi.string().allow(null),
+      mobile3: joi.string().allow(null),
+      email: joi
+        .string()
+        .email({ tlds: { allow: false } })
+        .allow(null),
+      mother: joi.string().allow(null),
+      father: joi.string().allow(null),
     }
   }
 
   castPayloadToModel(payload: any) {
     return {
       nome: payload.name,
-      dtnascimento: payload.dateOfBirth,
+      dtnascimento: dateStringToObject(payload.dateOfBirth),
       sexo: payload.gender,
       rg: payload.rg,
       orgaoemissor: payload.rgEmittingOrgan,
@@ -73,7 +77,7 @@ export default class People extends BaseModel {
       cpf: payload.cpf,
       carteiradetrabalho: payload.workCard,
       endereco: payload.address,
-      cep: payload.postalCode,
+      cep: payload.cep,
       bairro: payload.neighborhood,
       cidade: payload.city,
       estado: payload.state,
@@ -91,6 +95,32 @@ export default class People extends BaseModel {
   }
 
   findById(id: number) {
-    throw new Error('Method not implemented.')
+    return this.connection
+      .select(
+        'id',
+        'nome as name',
+        'dtnascimento as dateOfBirth',
+        'sexo as gender',
+        'rg',
+        'cpf',
+        'endereco as address',
+        'cep',
+        'bairro as neighborhood',
+        'cidade as city',
+        'estado as state',
+        'pai as father',
+        'mae as mother',
+        'telefone as phone',
+        'telcontato as phoneContact',
+        'telefone2 as phone2',
+        'tel2contato as phone2Contact',
+        'celular as mobile',
+        'celular2 as mobile2',
+        'celular3 as mobile3',
+        'email'
+      )
+      .from(this.tableName)
+      .where({ id })
+      .then((models) => (models.length ? models[0] : null))
   }
 }

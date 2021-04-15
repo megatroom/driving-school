@@ -21,7 +21,7 @@ export interface EmployeePayload {
   cpf?: string
   workCard?: string
   address?: string
-  postalCode?: string
+  cep?: string
   neighborhood?: string
   city?: string
   state?: string

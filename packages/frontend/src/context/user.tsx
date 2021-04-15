@@ -7,6 +7,7 @@ import {
   useEffect,
 } from 'react'
 import { User, Menu, getUserProfile } from 'services/api/users'
+import { logout } from 'services/api/auth'
 
 export enum AuthStatus {
   idle,
@@ -19,11 +20,13 @@ interface State {
   user?: User
   menu?: Menu[]
   setCurrentUser: (data: any) => void
+  logout: () => void
 }
 
 const initialState = {
   authStatus: AuthStatus.idle,
   setCurrentUser: () => {},
+  logout: () => {},
 }
 
 const UserContext = createContext<State>(initialState)
@@ -49,13 +52,18 @@ const reducer: Reducer<State, any> = (state, action) => {
 export const UserProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
+  const handleLogout = () => {
+    logout()
+    dispatch({ type: 'logout' })
+  }
+
   useEffect(() => {
     getUserProfile()
       .then(({ data }) => {
         dispatch({ type: 'set-current-user', data })
       })
       .catch(() => {
-        dispatch({ type: 'logout' })
+        handleLogout()
       })
   }, [])
 
@@ -65,6 +73,9 @@ export const UserProvider: React.FC = ({ children }) => {
         ...state,
         setCurrentUser: useCallback((data) => {
           dispatch({ type: 'set-current-user', data })
+        }, []),
+        logout: useCallback(() => {
+          handleLogout()
         }, []),
       }}
     >

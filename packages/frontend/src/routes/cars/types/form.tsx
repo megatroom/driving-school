@@ -41,9 +41,11 @@ export default function CarTypeForm() {
         defaultValue={model?.description}
         control={control}
         disabled={isPosting}
+        maxLength={100}
         id="description"
         label="Descrição"
         required
+        autoFocus
       />
       <MoneyField
         error={validationError?.commission}

@@ -88,6 +88,10 @@ const client = {
   saveToken: (token: string) => {
     storage.setItem(KEY_TOKEN, token)
   },
+
+  clearToken: () => {
+    storage.removeItem(KEY_TOKEN)
+  },
 }
 
 export default client

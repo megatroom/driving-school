@@ -14,9 +14,9 @@ export default abstract class BaseModel {
   abstract castPayloadToModel(payload: any): any
   abstract findById(id: number): any
 
-  async create(model: any) {
+  async create(payload: any) {
     const ids = await this.connection
-      .insert(this.castPayloadToModel(model))
+      .insert(this.castPayloadToModel(payload))
       .into(this.tableName)
 
     return this.findById(ids[0])

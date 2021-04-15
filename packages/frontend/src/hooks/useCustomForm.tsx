@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useSnackbar } from 'notistack'
+
+import { AdapterModelConfig, modelToPayloadAdapter } from 'adapters/model'
 
 interface Props<T> {
   getModel: (id: number) => Promise<T>
@@ -10,6 +12,7 @@ interface Props<T> {
   postModel: (payload: any) => Promise<T>
   onSuccess: () => void
   entityName: string
+  adapters?: AdapterModelConfig
 }
 
 export default function useCustomForm<T>({
@@ -18,9 +21,10 @@ export default function useCustomForm<T>({
   postModel,
   onSuccess,
   entityName,
+  adapters,
 }: Props<T>) {
   const queryClient = useQueryClient()
-  const { control, handleSubmit } = useForm()
+  const { control, handleSubmit, getValues, setValue } = useForm()
   const { enqueueSnackbar } = useSnackbar()
   const [validationError, setValidationError] = useState<Record<string, any>>()
   const [customError, setCustomError] = useState<Error>()
@@ -28,6 +32,12 @@ export default function useCustomForm<T>({
   const [isLoading, toggleLoading] = useState(true)
   const [isPosting, togglePosting] = useState(false)
   const { id } = useParams()
+  const isEditingMode = !!id
+
+  const adaptModelToPayload = useCallback(
+    (model) => modelToPayloadAdapter(adapters || {})(model),
+    [adapters]
+  )
 
   useEffect(() => {
     if (id) {
@@ -49,8 +59,8 @@ export default function useCustomForm<T>({
     togglePosting(true)
 
     const promise = id
-      ? putModel(parseInt(id, 10), payload)
-      : postModel(payload)
+      ? putModel(parseInt(id, 10), adaptModelToPayload(payload))
+      : postModel(adaptModelToPayload(payload))
 
     promise
       .then(() => {
@@ -74,8 +84,11 @@ export default function useCustomForm<T>({
 
   return {
     handleSubmit: handleSubmit(onSubmit),
+    getValues,
+    setValue,
     isLoading,
     isPosting,
+    isEditingMode,
     validationError,
     customError,
     control,

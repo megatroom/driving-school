@@ -13,7 +13,7 @@ function NumberFormatCustom({ inputRef, onChange, ...other }: NumberProps) {
       {...other}
       getInputRef={inputRef}
       onValueChange={(values) => {
-        onChange && onChange(values.floatValue)
+        onChange && onChange({ target: { value: values.floatValue } })
       }}
       prefix=""
       maxLength={4}
