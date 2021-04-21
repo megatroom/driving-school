@@ -44,7 +44,7 @@ exports.seed = async function (knex) {
     },
   ])
 
-  await knex(moduleTableName).insert([
+  await knex(pagesTableName).insert([
     {
       id: 1,
       idmodulo: 1,

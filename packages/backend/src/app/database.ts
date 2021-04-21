@@ -13,6 +13,7 @@ export const initDbConnection = () => {
       connection: {
         filename: db.database,
       },
+      useNullAsDefault: true,
     })
   } else {
     singletonConnection = knex({
@@ -24,6 +25,7 @@ export const initDbConnection = () => {
         password: db.password,
         database: db.database,
       },
+      useNullAsDefault: true,
       debug: config.log.level === 'debug',
     })
   }

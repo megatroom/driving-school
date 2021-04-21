@@ -2,6 +2,7 @@
   "name": "driving-school",
   "version": "0.0.0",
   "scripts": {
+    "bootstrap": "lerna bootstrap",
     "test": "lerna run test",
     "cover": "lerna run cover",
     "lint:check": "lerna run lint:check",
