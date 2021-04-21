@@ -39,6 +39,9 @@ const request = (config: AxiosRequestConfig) => {
   const token = storage.getItem(KEY_TOKEN) || ''
 
   return new Promise<AxiosResponse>((resolve, reject) => {
+    // Leave this for debug
+    // console.log(`${config.method} ${config.url}`)
+
     instance
       .request({
         ...config,

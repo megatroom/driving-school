@@ -24,6 +24,12 @@ const handlers = [
       )
     )
   }),
+  rest.get(`${baseURL}/cars/types/1`, async (req, res, ctx) => {
+    return res(ctx.json({ id: 1, description: 'Car', commission: 10 }))
+  }),
+  rest.post(`${baseURL}/cars/types`, async (req, res, ctx) => {
+    return res(ctx.json({}))
+  }),
 ]
 
 export { handlers }

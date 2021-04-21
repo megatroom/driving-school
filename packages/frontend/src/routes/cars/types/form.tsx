@@ -1,5 +1,4 @@
-import { useNavigate } from 'react-router-dom'
-
+import { useNavigate } from 'routes/navigate'
 import { postCarType, getCarType, CarType, putCarType } from 'services/api/cars'
 import useCustomForm from 'hooks/useCustomForm'
 import FormPage from 'pages/FormPage'

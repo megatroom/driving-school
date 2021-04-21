@@ -1,5 +1,5 @@
 import { FC, ReactElement } from 'react'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { render, RenderOptions } from '@testing-library/react'
 import { SnackbarProvider } from 'notistack'
@@ -9,13 +9,19 @@ import { UserProvider } from './context/user'
 
 const queryClient = new QueryClient()
 
-const AllTheProviders: FC = ({ children }) => {
+interface Props {
+  initialEntries?: string[]
+}
+
+const AllTheProviders: FC<Props> = ({ initialEntries, children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <UserProvider>
         <ThemeProvider>
           <SnackbarProvider maxSnack={5}>
-            <MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>
+            <MemoryRouter initialEntries={initialEntries || ['/']}>
+              {children}
+            </MemoryRouter>
           </SnackbarProvider>
         </ThemeProvider>
       </UserProvider>
@@ -29,5 +35,14 @@ const customRender = (
 ) => render(ui, { wrapper: AllTheProviders, ...options })
 
 export * from '@testing-library/react'
+
+export const renderOnRouteId = (id: number, ui: ReactElement) =>
+  render(
+    <AllTheProviders initialEntries={[`/form/${id}`]}>
+      <Routes>
+        <Route path="/form/:id" element={ui} />
+      </Routes>
+    </AllTheProviders>
+  )
 
 export { customRender as render }
