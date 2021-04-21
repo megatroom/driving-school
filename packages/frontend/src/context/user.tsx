@@ -60,13 +60,19 @@ export const UserProvider: React.FC = ({ children }) => {
   }
 
   useEffect(() => {
+    let isMounted = true
+
     getUserProfile()
       .then(({ data }) => {
-        dispatch({ type: 'set-current-user', data })
+        if (isMounted) dispatch({ type: 'set-current-user', data })
       })
       .catch(() => {
-        handleLogout()
+        if (isMounted) handleLogout()
       })
+
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   return (

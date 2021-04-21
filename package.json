@@ -4,6 +4,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "test": "lerna run test",
+    "test:ci": "lerna run test:ci",
     "cover": "lerna run cover",
     "lint:check": "lerna run lint:check",
     "prettier:check": "lerna run prettier:check"

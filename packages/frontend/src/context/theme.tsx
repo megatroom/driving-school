@@ -1,9 +1,12 @@
-import { createMuiTheme } from '@material-ui/core/styles'
+import {
+  ThemeProvider as MuiThemeProvider,
+  createMuiTheme,
+} from '@material-ui/core/styles'
 import { ptBR } from '@material-ui/core/locale'
 import blue from '@material-ui/core/colors/blue'
 import purple from '@material-ui/core/colors/purple'
 
-export const theme = createMuiTheme(
+const theme = createMuiTheme(
   {
     palette: {
       primary: {
@@ -15,4 +18,8 @@ export const theme = createMuiTheme(
     },
   },
   ptBR
+)
+
+export const ThemeProvider: React.FC = ({ children }) => (
+  <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
 )

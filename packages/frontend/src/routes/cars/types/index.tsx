@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'routes/navigate'
 import { getCarTypes, deleteCarType } from 'services/api/cars'
 import ListPage from 'pages/ListPage'
 
@@ -11,7 +11,7 @@ export default function CarTypeList() {
       title="Tipos de carro"
       loadData={getCarTypes}
       onNewClick={() => {
-        navigate(`/cars/types/new`)
+        navigate('/cars/types/new')
       }}
       onDeleteClick={deleteCarType}
       primaryTextKey="description"
