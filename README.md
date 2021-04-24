@@ -64,3 +64,13 @@ You can use the users:
 | Login   | Password | Description                  |
 | ------- | -------- | ---------------------------- |
 | `admin` | `admin`  | User with all access granted |
+
+### Troubleshooting
+
+Fix invalid dates:
+
+```sql
+update alunos
+set validadeprocesso = NULL
+where '0000-00-00' = DATE_FORMAT(validadeprocesso,'%Y-%m-%d')
+```

@@ -1,13 +1,11 @@
 {
-    "eslint.workingDirectories": [
-        {
-            "pattern": "./packages/*/",
-            "changeProcessCWD": true
-        }
-    ],
-    "editor.rulers": [80],
-    "editor.formatOnSave": true,
-    "cSpell.words": [
-        "clsx"
-    ]
+  "eslint.workingDirectories": [
+    {
+      "pattern": "./packages/*/",
+      "changeProcessCWD": true
+    }
+  ],
+  "editor.rulers": [80],
+  "editor.formatOnSave": true,
+  "cSpell.words": ["clsx"]
 }

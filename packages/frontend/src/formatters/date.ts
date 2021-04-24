@@ -11,6 +11,14 @@ export const formatPayloadDate = (str: string) => {
   return format(parseISO(str), 'dd/MM/yyyy')
 }
 
+export const formatPayloadDateTime = (str: string) => {
+  if (!str) {
+    return ''
+  }
+
+  return format(parseISO(str), 'dd/MM/yyyy HH:mm')
+}
+
 export const formatDateToPayload = (date: string) => {
   if (!date) {
     return null

@@ -2,38 +2,35 @@ import joi from 'joi'
 
 import { pluralize } from '../formatters/string'
 import BaseModel from './BaseModel'
-import Car from './Car'
+import Student from './Student'
 
-export default class CarType extends BaseModel {
+export default class Origin extends BaseModel {
   constructor() {
-    super('tipocarros')
+    super('origens')
   }
 
   static postSchema() {
     return {
       description: joi.string().required(),
-      commission: joi.number().required(),
     }
   }
 
   static labelsSchema() {
     return {
       description: 'Descrição',
-      commission: 'Comissão',
     }
   }
 
   castPayloadToModel(payload: any) {
     return {
       descricao: payload.description,
-      comissao: payload.commission,
     }
   }
 
   async canDelete(id: number) {
-    const carCount = await new Car().countByCarTypeId(id)
-    if (carCount > 0) {
-      return `Tipo usado em ${pluralize(carCount as number, 'carro')}.`
+    const studentCount = await new Student().countByOriginId(id)
+    if (studentCount > 0) {
+      return `Origem usada em ${pluralize(studentCount as number, 'aluno')}.`
     }
 
     return null
@@ -49,15 +46,13 @@ export default class CarType extends BaseModel {
       switch (field) {
         case 'description':
           return accumulator.concat(['descricao'])
-        case 'commission':
-          return accumulator.concat(['comissao'])
         default:
           return accumulator
       }
     }, [])
 
     const newConnection = this.connection
-      .select('id', 'descricao as description', 'comissao as commission')
+      .select('id', 'descricao as description')
       .from(this.tableName)
 
     if (search) {
@@ -69,7 +64,7 @@ export default class CarType extends BaseModel {
 
   findById(id: number) {
     return this.connection
-      .select('id', 'descricao as description', 'comissao as commission')
+      .select('id', 'descricao as description')
       .from(this.tableName)
       .where({ id })
       .then((models) => (models.length ? models[0] : null))

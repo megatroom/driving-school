@@ -22,6 +22,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 
 import { formatNumberToString } from 'formatters/number'
+import { formatPayloadDateTime } from 'formatters/date'
 import ConfirmDialog from 'atoms/ConfirmDialog'
 import SearchBar from 'atoms/SearchBar'
 
@@ -57,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-type ColumnType = 'text' | 'currency'
+type ColumnType = 'text' | 'currency' | 'datetime'
 
 export interface Column {
   key: string
@@ -80,11 +81,14 @@ const getEmptyRows = (rowsPerPage: number) => {
 }
 
 const formatValue = (type: ColumnType, value: any) => {
-  if (type === 'currency') {
-    return formatNumberToString(value)
+  switch (type) {
+    case 'currency':
+      return formatNumberToString(value)
+    case 'datetime':
+      return formatPayloadDateTime(value)
+    default:
+      return value
   }
-
-  return value
 }
 
 interface Props {

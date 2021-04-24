@@ -13,6 +13,8 @@ export interface AdapterModelConfig {
   dateFields?: Array<string>
   readOnlyFields?: Array<string>
   phoneFields?: Array<string>
+  booleanFields?: Array<string>
+  cpfFields?: Array<string>
 }
 
 export const modelToPayloadAdapter = ({
@@ -20,6 +22,8 @@ export const modelToPayloadAdapter = ({
   dateFields,
   readOnlyFields,
   phoneFields,
+  booleanFields,
+  cpfFields,
 }: AdapterModelConfig) => (model: any) => {
   const result = { ...model }
 
@@ -37,6 +41,16 @@ export const modelToPayloadAdapter = ({
 
   phoneFields?.forEach((key) => {
     result[key] = result[key] && result[key].trim()
+  })
+
+  booleanFields?.forEach((key) => {
+    result[key] = result[key] ? 'S' : 'N'
+  })
+
+  cpfFields?.forEach((key) => {
+    if (result[key]) {
+      result[key] = result[key].replaceAll('.', '').replaceAll('.', '')
+    }
   })
 
   Object.keys(result).forEach((key) => {

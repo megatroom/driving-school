@@ -17,14 +17,20 @@ const EmployeesRoleForm = lazy(() => import('./employees/roles/form'))
 const EmployeesRoles = lazy(() => import('./employees/roles'))
 const EmployeesForm = lazy(() => import('./employees/form'))
 const Employees = lazy(() => import('./employees'))
+const StudentsOriginsForm = lazy(() => import('./students/origins/form'))
+const StudentsOrigins = lazy(() => import('./students/origins'))
+const StudentsForm = lazy(() => import('./students/form'))
+const Students = lazy(() => import('./students'))
 
 type PageRecord = Record<number, string>
 const PageGroupRecord: Record<number, PageRecord> = {
   2: {
     8: '/employees/roles',
     9: '/employees',
+    10: '/students',
     11: '/cars',
     18: '/cars/types',
+    30: '/students/origins',
   },
 }
 
@@ -62,21 +68,30 @@ export default function AppRoutes() {
       </Route>
       <Route path="/" element={<PrivateLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/cars/types/new" element={<CarsTypesForm />} />
         <Route path="/cars/types/edit/:id" element={<CarsTypesForm />} />
+        <Route path="/cars/types/new" element={<CarsTypesForm />} />
         <Route path="/cars/types" element={<CarsTypes />} />
-        <Route path="/cars/new" element={<CarsForm />} />
         <Route path="/cars/edit/:id" element={<CarsForm />} />
+        <Route path="/cars/new" element={<CarsForm />} />
         <Route path="/cars" element={<Cars />} />
-        <Route path="/employees/roles/new" element={<EmployeesRoleForm />} />
         <Route
           path="/employees/roles/edit/:id"
           element={<EmployeesRoleForm />}
         />
+        <Route path="/employees/roles/new" element={<EmployeesRoleForm />} />
         <Route path="/employees/roles" element={<EmployeesRoles />} />
-        <Route path="/employees/new" element={<EmployeesForm />} />
         <Route path="/employees/edit/:id" element={<EmployeesForm />} />
+        <Route path="/employees/new" element={<EmployeesForm />} />
         <Route path="/employees" element={<Employees />} />
+        <Route
+          path="/students/origins/edit/:id"
+          element={<StudentsOriginsForm />}
+        />
+        <Route path="/students/origins/new" element={<StudentsOriginsForm />} />
+        <Route path="/students/origins" element={<StudentsOrigins />} />
+        <Route path="/students/edit/:id" element={<StudentsForm />} />
+        <Route path="/students/new" element={<StudentsForm />} />
+        <Route path="/students" element={<Students />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

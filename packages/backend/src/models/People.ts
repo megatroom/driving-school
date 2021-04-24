@@ -73,7 +73,7 @@ export default class People extends BaseModel {
       sexo: payload.gender,
       rg: payload.rg,
       orgaoemissor: payload.rgEmittingOrgan,
-      rgdataemissao: payload.rgPrintDate,
+      rgdataemissao: dateStringToObject(payload.rgPrintDate),
       cpf: payload.cpf,
       carteiradetrabalho: payload.workCard,
       endereco: payload.address,

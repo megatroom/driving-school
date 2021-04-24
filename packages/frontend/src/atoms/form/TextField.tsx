@@ -4,6 +4,7 @@ import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase'
 import FormHelperText from '@material-ui/core/FormHelperText'
+import clsx from 'clsx'
 
 export const CustomInput = withStyles((theme) => ({
   root: {
@@ -30,7 +31,7 @@ export const CustomInput = withStyles((theme) => ({
 }))(InputBase)
 
 const useStyles = makeStyles((theme) => ({
-  control: {
+  controlBottom: {
     marginBottom: theme.spacing(3),
   },
   label: {
@@ -47,6 +48,7 @@ export interface TextFieldProps extends InputBaseProps {
   required?: boolean
   maxLength?: number
   disableAutoUppercase?: boolean
+  disableMarginBottom?: boolean
 }
 
 export default function TextField({
@@ -60,6 +62,7 @@ export default function TextField({
   required,
   maxLength,
   disableAutoUppercase,
+  disableMarginBottom,
   ...rest
 }: TextFieldProps) {
   const classes = useStyles()
@@ -67,7 +70,11 @@ export default function TextField({
   const errorId = `field-${id}-error-text`
 
   return (
-    <FormControl error={hasError} className={classes.control} fullWidth>
+    <FormControl
+      error={hasError}
+      className={clsx({ [classes.controlBottom]: !disableMarginBottom })}
+      fullWidth
+    >
       <InputLabel className={classes.label} htmlFor={id} shrink>
         {label + (required ? ' *' : '')}
       </InputLabel>

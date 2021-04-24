@@ -5,6 +5,8 @@ import carsTypes from './cars/types'
 import cars from './cars'
 import employeesRoles from './employees/roles'
 import employees from './employees'
+import studentOrigins from './students/origins'
+import students from './students'
 
 export default [
   healthcheck,
@@ -14,4 +16,6 @@ export default [
   cars,
   employeesRoles,
   employees,
+  studentOrigins,
+  students,
 ]

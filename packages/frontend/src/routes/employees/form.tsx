@@ -18,6 +18,7 @@ import DateField from 'atoms/form/DateField'
 import ForeignField from 'atoms/form/ForeignField'
 import SelectField from 'atoms/form/SelectField'
 import PhoneField from 'atoms/form/PhoneField'
+import CpfField from 'atoms/form/CpfField'
 
 export default function EmployeeForm() {
   const navigate = useNavigate()
@@ -46,6 +47,7 @@ export default function EmployeeForm() {
       dateFields: ['dateOfBirth'],
       readOnlyFields: ['enrollment'],
       phoneFields: ['phone', 'mobile', 'mobile2', 'mobile3'],
+      cpfFields: ['cpf'],
     },
   })
 
@@ -107,7 +109,7 @@ export default function EmployeeForm() {
           />
         </GridCell>
         <GridCell column={4}>
-          <TextField
+          <CpfField
             error={validationError?.cpf}
             defaultValue={model?.cpf}
             control={control}
