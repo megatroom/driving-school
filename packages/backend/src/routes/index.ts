@@ -7,6 +7,8 @@ import employeesRoles from './employees/roles'
 import employees from './employees'
 import studentOrigins from './students/origins'
 import students from './students'
+import schedulesTypes from './schedules/types'
+import schedules from './schedules'
 
 export default [
   healthcheck,
@@ -18,4 +20,6 @@ export default [
   employees,
   studentOrigins,
   students,
+  schedulesTypes,
+  schedules,
 ]
