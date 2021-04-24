@@ -5,7 +5,9 @@ exports.up = function (knex) {
     if (!exists) {
       return knex.schema.createTable(tableName, (t) => {
         t.increments('id').primary()
-        t.foreign('idpessoa').references('pessoa.id').notNullable()
+        t.integer('idpessoa').unsigned().notNullable()
+        t.foreign('idpessoa').references('pessoa.id')
+        t.integer('idorigem').unsigned()
         t.foreign('idorigem').references('origens.id')
         t.int('matricula').notNullable()
         t.string('matriculacfc', 20)

@@ -1,4 +1,4 @@
-const tableName = 'tipocarros'
+const tableName = 'tiposagendamentos'
 
 exports.seed = async function (knex) {
   await knex(tableName).del()
@@ -6,18 +6,15 @@ exports.seed = async function (knex) {
   await knex(tableName).insert([
     {
       id: 1,
-      descricao: 'Carro',
-      comissao: 10,
+      descricao: 'Cadastro no Detran RJ',
     },
     {
       id: 2,
-      descricao: 'Moto',
-      comissao: 8,
+      descricao: 'Exame na clínica',
     },
     {
       id: 3,
-      descricao: 'Caminhão',
-      comissao: 5,
+      descricao: 'Prova teórica',
     },
   ])
 }
