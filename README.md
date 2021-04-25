@@ -67,6 +67,13 @@ You can use the users:
 
 ### Troubleshooting
 
+Add missing fields to `alunos`:
+
+```sql
+ALTER TABLE autoescola.alunos ADD dtcreate DATETIME NULL;
+ALTER TABLE autoescola.alunos ADD dtupdate DATETIME NULL;
+```
+
 Fix invalid dates:
 
 ```sql

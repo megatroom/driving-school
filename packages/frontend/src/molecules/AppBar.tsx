@@ -1,9 +1,10 @@
 import clsx from 'clsx'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { fade, makeStyles } from '@material-ui/core/styles'
 import MuAppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
+import MuiLink from '@material-ui/core/Link'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -149,9 +150,16 @@ export default function AppBar({
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
+          <MuiLink
+            variant="h6"
+            color="inherit"
+            underline="none"
+            component={Link}
+            to="/"
+            noWrap
+          >
             {config.title}
-          </Typography>
+          </MuiLink>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton
