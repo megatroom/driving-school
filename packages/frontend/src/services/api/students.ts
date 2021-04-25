@@ -84,11 +84,12 @@ export const getStudents = ({
   page,
   perPage,
   order,
+  orderDir,
   search,
 }: Pagination): Promise<ResponseListData<Student>> =>
   client
     .get(
-      `/students?page=${page}&perPage=${perPage}&order=${order}${
+      `/students?page=${page}&perPage=${perPage}&order=${order}&orderDir=${orderDir}${
         search ? `&search=${search}` : ''
       }`
     )

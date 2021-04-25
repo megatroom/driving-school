@@ -158,20 +158,31 @@ export default class Student extends BaseModel {
     limit: number,
     offset: number,
     order: string[],
+    orderDirection: string,
     search: string | undefined
   ) {
-    const orderBy = order.reduce((accumulator: string[], field: string) => {
+    const orderBy = order.reduce((accumulator: any[], field: string) => {
       switch (field) {
         case 'enrollment':
-          return accumulator.concat(['a.matricula'])
+          return accumulator.concat([
+            { column: 'a.matricula', order: orderDirection },
+          ])
         case 'enrollmentcfc':
-          return accumulator.concat(['a.matriculacfc'])
+          return accumulator.concat([
+            { column: 'a.matriculacfc', order: orderDirection },
+          ])
         case 'dtcreate':
-          return accumulator.concat(['a.dtcreate'])
+          return accumulator.concat([
+            { column: 'a.dtcreate', order: orderDirection },
+          ])
         case 'name':
-          return accumulator.concat(['p.nome'])
+          return accumulator.concat([
+            { column: 'p.nome', order: orderDirection },
+          ])
         case 'cpf':
-          return accumulator.concat(['p.cpf'])
+          return accumulator.concat([
+            { column: 'p.cpf', order: orderDirection },
+          ])
         default:
           return accumulator
       }
