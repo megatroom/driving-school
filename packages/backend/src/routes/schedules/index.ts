@@ -18,11 +18,23 @@ router.get(
   validate({ query: paginationQuerySchema() }),
   async (req, res, next) => {
     try {
-      const { perPage, offset, order, search } = formatRequestPagination(req)
+      const {
+        perPage,
+        offset,
+        order,
+        orderDirection,
+        search,
+      } = formatRequestPagination(req)
 
       const model = new Scheduling()
       const total = await model.count()
-      const data = await model.findAll(perPage, offset, order, search)
+      const data = await model.findAll(
+        perPage,
+        offset,
+        order,
+        orderDirection,
+        search
+      )
 
       res.json({ data, total })
     } catch (error) {

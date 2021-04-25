@@ -18,6 +18,7 @@ interface Props {
   title: string
   primaryTextKey: string
   defaultOrder: string
+  defaultOrderDir?: 'asc' | 'desc'
   columns: Column[]
 }
 
@@ -29,6 +30,7 @@ export default function ListPage({
   title,
   primaryTextKey,
   defaultOrder,
+  defaultOrderDir,
   columns,
 }: Props) {
   const { enqueueSnackbar } = useSnackbar()
@@ -37,6 +39,7 @@ export default function ListPage({
     page: 1,
     perPage: 10,
     order: defaultOrder,
+    orderDir: defaultOrderDir || 'asc',
   })
 
   const { isLoading, error, data } = useQuery<ResLoadData, Error>(
@@ -63,6 +66,7 @@ export default function ListPage({
         rowsPerPage={pagination.perPage}
         page={pagination.page - 1}
         order={pagination.order}
+        orderDir={pagination.orderDir}
         isLoading={isLoading}
         error={error}
         onPageChange={(event, newPage) => {
@@ -92,9 +96,15 @@ export default function ListPage({
             })
         }}
         onOrderChange={(key) => {
-          if (key !== pagination.order) {
+          if (key === pagination.order) {
             handlePaginationChange({
               order: key,
+              orderDir: pagination.orderDir === 'asc' ? 'desc' : 'asc',
+            })
+          } else {
+            handlePaginationChange({
+              order: key,
+              orderDir: 'asc',
             })
           }
         }}

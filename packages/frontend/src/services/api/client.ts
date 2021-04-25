@@ -65,6 +65,7 @@ export interface Pagination {
   page: number
   perPage: number
   order: string
+  orderDir?: string
   search?: string
 }
 

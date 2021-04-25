@@ -88,17 +88,25 @@ export default class SchedulingType extends BaseModel {
     limit: number,
     offset: number,
     order: string[],
+    orderDirection: string,
     search: string | undefined
   ) {
-    const orderBy = order.reduce((accumulator: string[], field: string) => {
+    const orderBy = order.reduce((accumulator: any[], field: string) => {
       switch (field) {
         case 'description':
-          return accumulator.concat(['d.descricao'])
-        case 'student':
-          return accumulator.concat(['c.nome'])
+          return accumulator.concat([
+            { column: 'd.descricao', order: orderDirection },
+          ])
+        case 'studentName':
+          return accumulator.concat([
+            { column: 'c.nome', order: orderDirection },
+          ])
         case 'date':
         case 'time':
-          return accumulator.concat(['a.data', 'a.hora'])
+          return accumulator.concat([
+            { column: 'a.data', order: orderDirection },
+            { column: 'a.hora', order: orderDirection },
+          ])
         default:
           return accumulator
       }

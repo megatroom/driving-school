@@ -20,6 +20,7 @@ import AlertTitle from '@material-ui/lab/AlertTitle'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
 
 import { formatNumberToString } from 'formatters/number'
 import {
@@ -107,6 +108,7 @@ interface Props {
   rows: any[]
   rowsPerPage: number
   order?: string
+  orderDir?: 'asc' | 'desc'
   page: number
   isLoading?: boolean
   error?: Error | null
@@ -128,6 +130,7 @@ export default function DataTable({
   rows,
   rowsPerPage,
   order,
+  orderDir,
   page,
   isLoading,
   error,
@@ -195,7 +198,11 @@ export default function DataTable({
                   {column.label}
                   {order && order === column.key && (
                     <span className={classes.orderIcon}>
-                      <ArrowDownwardIcon fontSize="inherit" />
+                      {orderDir === 'asc' ? (
+                        <ArrowDownwardIcon fontSize="inherit" />
+                      ) : (
+                        <ArrowUpwardIcon fontSize="inherit" />
+                      )}
                     </span>
                   )}
                 </TableCell>

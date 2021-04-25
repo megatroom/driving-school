@@ -59,11 +59,12 @@ export const getSchedules = ({
   page,
   perPage,
   order,
+  orderDir,
   search,
 }: Pagination): Promise<ResponseListData<Scheduling>> =>
   client
     .get(
-      `/schedules?page=${page}&perPage=${perPage}&order=${order}${
+      `/schedules?page=${page}&perPage=${perPage}&order=${order}&orderDir=${orderDir}${
         search ? `&search=${search}` : ''
       }`
     )
