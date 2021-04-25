@@ -8,38 +8,20 @@ export interface SchedulingType extends SchedulingTypePayload {
   id: number
 }
 
-export interface SchedulesPayload {
-  enrollment: string
-  status: string
-  employeeTypeId: number
-  name: string
-  dateOfBirth?: string
-  gender?: string
-  rg?: string
-  rgPrintDate?: string
-  rgEmittingOrgan?: string
-  cpf?: string
-  workCard?: string
-  address?: string
-  cep?: string
-  neighborhood?: string
-  city?: string
-  state?: string
-  phone?: string
-  phoneContact?: string
-  phone2?: string
-  phone2Contact?: string
-  mobile?: string
-  mobile2?: string
-  mobile3?: string
-  email?: string
-  mother?: string
-  father?: string
+export interface SchedulingPayload {
+  description: string
+  studentId: number
+  schedulingTypeId: number
+  date: string
+  time: string
+  approved: string
 }
 
-export interface Schedules extends SchedulesPayload {
+export interface Scheduling extends SchedulingPayload {
   id: number
   schedulingTypeDesc: string
+  approvedDesc: string
+  studentName: string
 }
 
 export const getSchedulingTypes = ({
@@ -78,7 +60,7 @@ export const getSchedules = ({
   perPage,
   order,
   search,
-}: Pagination): Promise<ResponseListData<Schedules>> =>
+}: Pagination): Promise<ResponseListData<Scheduling>> =>
   client
     .get(
       `/schedules?page=${page}&perPage=${perPage}&order=${order}${
@@ -87,17 +69,19 @@ export const getSchedules = ({
     )
     .then(({ data }) => data)
 
-export const getScheduling = (id: number): Promise<Schedules> =>
+export const getScheduling = (id: number): Promise<Scheduling> =>
   client.get(`/schedules/${id}`).then(({ data }) => data)
 
-export const postSchedules = (payload: SchedulesPayload): Promise<Schedules> =>
+export const postScheduling = (
+  payload: SchedulingPayload
+): Promise<Scheduling> =>
   client.post('/schedules/', payload).then(({ data }) => data)
 
-export const putSchedules = (
+export const putScheduling = (
   id: number,
-  payload: SchedulesPayload
-): Promise<Schedules> =>
+  payload: SchedulingPayload
+): Promise<Scheduling> =>
   client.put(`/schedules/${id}`, payload).then(({ data }) => data)
 
-export const deleteSchedules = (id: number): Promise<any> =>
+export const deleteScheduling = (id: number): Promise<any> =>
   client.delete(`/schedules/${id}`).then(() => {})

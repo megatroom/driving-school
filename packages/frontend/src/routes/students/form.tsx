@@ -107,7 +107,8 @@ export default function StudentForm() {
             control={control}
             disabled={isPosting}
             id="originId"
-            label="Função"
+            label="Origem"
+            required
           />
         </GridCell>
       </GridRow>

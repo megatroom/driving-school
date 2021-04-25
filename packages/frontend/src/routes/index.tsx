@@ -23,9 +23,14 @@ const StudentsForm = lazy(() => import('./students/form'))
 const Students = lazy(() => import('./students'))
 const SchedulesTypesForm = lazy(() => import('./schedules/types/form'))
 const SchedulesTypes = lazy(() => import('./schedules/types'))
+const SchedulesForm = lazy(() => import('./schedules/form'))
+const Schedules = lazy(() => import('./schedules'))
 
 type PageRecord = Record<number, string>
 const PageGroupRecord: Record<number, PageRecord> = {
+  1: {
+    7: '/schedules',
+  },
   2: {
     8: '/employees/roles',
     9: '/employees',
@@ -101,6 +106,9 @@ export default function AppRoutes() {
         />
         <Route path="/schedules/types/new" element={<SchedulesTypesForm />} />
         <Route path="/schedules/types" element={<SchedulesTypes />} />
+        <Route path="/schedules/edit/:id" element={<SchedulesForm />} />
+        <Route path="/schedules/new" element={<SchedulesForm />} />
+        <Route path="/schedules" element={<Schedules />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

@@ -3,21 +3,27 @@ import format from 'date-fns/format'
 import formatISO from 'date-fns/formatISO'
 import parseISO from 'date-fns/parseISO'
 
-export const formatPayloadDate = (str: string) => {
+const formatPayloadWithFormat = (str: string, customFormat: string) => {
   if (!str) {
     return ''
   }
 
-  return format(parseISO(str), 'dd/MM/yyyy')
-}
-
-export const formatPayloadDateTime = (str: string) => {
-  if (!str) {
-    return ''
+  try {
+    return format(parseISO(str), customFormat)
+  } catch (err) {
+    console.error('Invalidade date/time: ', str)
+    return str
   }
-
-  return format(parseISO(str), 'dd/MM/yyyy HH:mm')
 }
+
+export const formatPayloadDateTime = (str: string) =>
+  formatPayloadWithFormat(str, 'dd/MM/yyyy HH:mm')
+
+export const formatPayloadDate = (str: string) =>
+  formatPayloadWithFormat(str, 'dd/MM/yyyy')
+
+export const formatPayloadTime = (str: string) =>
+  formatPayloadWithFormat(str, 'HH:mm')
 
 export const formatDateToPayload = (date: string) => {
   if (!date) {

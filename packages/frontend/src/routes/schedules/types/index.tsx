@@ -5,12 +5,12 @@ import {
 } from 'services/api/schedules'
 import ListPage from 'pages/ListPage'
 
-export default function EmployeeRoleList() {
+export default function SchedulingTypeList() {
   const navigate = useNavigate()
 
   return (
     <ListPage
-      id="schedule-types"
+      id="scheduling-types"
       title="Tipo de agendamentos"
       loadData={getSchedulingTypes}
       onNewClick={() => {
