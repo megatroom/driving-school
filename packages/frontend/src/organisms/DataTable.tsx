@@ -8,16 +8,11 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import TablePagination from '@material-ui/core/TablePagination'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
 import Tooltip from '@material-ui/core/Tooltip'
 import IconButton from '@material-ui/core/IconButton'
-import Paper from '@material-ui/core/Paper'
-import AppBar from '@material-ui/core/AppBar'
 import Skeleton from '@material-ui/lab/Skeleton'
 import Alert from '@material-ui/lab/Alert'
 import AlertTitle from '@material-ui/lab/AlertTitle'
-import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
@@ -29,26 +24,10 @@ import {
   formatPayloadTime,
 } from 'formatters/date'
 import ConfirmDialog from 'atoms/ConfirmDialog'
-import SearchBar from 'atoms/SearchBar'
 
 const useStyles = makeStyles((theme) => ({
-  paper: {
-    width: '100%',
-    marginBottom: theme.spacing(2),
-    overflow: 'hidden',
-  },
   table: {
     minWidth: 650,
-  },
-  header: {
-    borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
-  },
-  toolbar: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-  },
-  title: {
-    flex: '1 1 100%',
   },
   orderIcon: {
     marginLeft: '3px',
@@ -114,10 +93,8 @@ interface Props {
   error?: Error | null
   onPageChange: (event: unknown, newPage: number) => void
   onRowsPerPageChange: (event: any) => void
-  onNewClick: () => void
   onDeleteClick?: (id: number) => void
   onOrderChange?: (key: string) => void
-  onSearch?: (text: string) => void
 }
 
 type DeletePayload = { id: number; text: string } | undefined
@@ -136,10 +113,8 @@ export default function DataTable({
   error,
   onPageChange,
   onRowsPerPageChange,
-  onNewClick,
   onDeleteClick,
   onOrderChange,
-  onSearch,
 }: Props) {
   const classes = useStyles()
   const [deletePayload, setDeletePayload] = useState<
@@ -158,30 +133,7 @@ export default function DataTable({
   }
 
   return (
-    <Paper className={classes.paper}>
-      <AppBar
-        className={classes.header}
-        position="static"
-        color="default"
-        elevation={0}
-      >
-        <Toolbar className={classes.toolbar}>
-          <Typography
-            className={classes.title}
-            variant="h6"
-            id="tableTitle"
-            component="div"
-          >
-            {title}
-          </Typography>
-          <SearchBar onChange={onSearch} />
-          <Tooltip title="Novo registro">
-            <IconButton aria-label="Novo registro" onClick={onNewClick}>
-              <AddIcon />
-            </IconButton>
-          </Tooltip>
-        </Toolbar>
-      </AppBar>
+    <>
       <TableContainer>
         <Table className={classes.table} aria-label="table">
           <TableHead>
@@ -276,6 +228,6 @@ export default function DataTable({
       >
         {`Confirma e exclusão do registro "${deletePayload?.text || ''}"?`}
       </ConfirmDialog>
-    </Paper>
+    </>
   )
 }

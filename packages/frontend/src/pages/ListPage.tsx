@@ -2,9 +2,14 @@ import { useState } from 'react'
 import { useQueryClient, useQuery } from 'react-query'
 import { useSnackbar } from 'notistack'
 import Container from '@material-ui/core/Container'
+import Tooltip from '@material-ui/core/Tooltip'
+import IconButton from '@material-ui/core/IconButton'
+import AddIcon from '@material-ui/icons/Add'
 
-import DataTable, { Column } from 'organisms/DataTable'
 import { Pagination } from 'services/api/client'
+import DataTable, { Column } from 'organisms/DataTable'
+import Panel from 'molecules/Panel'
+import SearchBar from 'atoms/SearchBar'
 
 interface ResLoadData {
   data: any[]
@@ -57,63 +62,77 @@ export default function ListPage({
 
   return (
     <Container maxWidth="md">
-      <DataTable
+      <Panel
         title={title}
-        primaryTextKey={primaryTextKey}
-        columns={columns}
-        total={data?.total || 0}
-        rows={data?.data || []}
-        rowsPerPage={pagination.perPage}
-        page={pagination.page - 1}
-        order={pagination.order}
-        orderDir={pagination.orderDir}
-        isLoading={isLoading}
-        error={error}
-        onPageChange={(event, newPage) => {
-          handlePaginationChange({
-            page: newPage + 1,
-          })
-        }}
-        onRowsPerPageChange={(event) => {
-          handlePaginationChange({
-            perPage: event.target.value,
-          })
-        }}
-        onNewClick={onNewClick}
-        onDeleteClick={(deleteId) => {
-          onDeleteClick(deleteId)
-            .then(() => {
-              queryClient.invalidateQueries(id)
-              enqueueSnackbar(`Exclusão efetuada com sucesso.`, {
-                variant: 'success',
-              })
-            })
-            .catch((err) => {
-              const message = err?.response?.data?.message || ''
-              enqueueSnackbar(`Erro ao excluir. ${message}`, {
-                variant: 'error',
-              })
-            })
-        }}
-        onOrderChange={(key) => {
-          if (key === pagination.order) {
+        renderActions={() => (
+          <>
+            <SearchBar
+              onChange={(text) => {
+                handlePaginationChange({
+                  search: text,
+                })
+              }}
+            />
+            <Tooltip title="Novo registro">
+              <IconButton aria-label="Novo registro" onClick={onNewClick}>
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+      >
+        <DataTable
+          title={title}
+          primaryTextKey={primaryTextKey}
+          columns={columns}
+          total={data?.total || 0}
+          rows={data?.data || []}
+          rowsPerPage={pagination.perPage}
+          page={pagination.page - 1}
+          order={pagination.order}
+          orderDir={pagination.orderDir}
+          isLoading={isLoading}
+          error={error}
+          onPageChange={(event, newPage) => {
             handlePaginationChange({
-              order: key,
-              orderDir: pagination.orderDir === 'asc' ? 'desc' : 'asc',
+              page: newPage + 1,
             })
-          } else {
+          }}
+          onRowsPerPageChange={(event) => {
             handlePaginationChange({
-              order: key,
-              orderDir: 'asc',
+              perPage: event.target.value,
             })
-          }
-        }}
-        onSearch={(text) => {
-          handlePaginationChange({
-            search: text,
-          })
-        }}
-      />
+          }}
+          onDeleteClick={(deleteId) => {
+            onDeleteClick(deleteId)
+              .then(() => {
+                queryClient.invalidateQueries(id)
+                enqueueSnackbar(`Exclusão efetuada com sucesso.`, {
+                  variant: 'success',
+                })
+              })
+              .catch((err) => {
+                const message = err?.response?.data?.message || ''
+                enqueueSnackbar(`Erro ao excluir. ${message}`, {
+                  variant: 'error',
+                })
+              })
+          }}
+          onOrderChange={(key) => {
+            if (key === pagination.order) {
+              handlePaginationChange({
+                order: key,
+                orderDir: pagination.orderDir === 'asc' ? 'desc' : 'asc',
+              })
+            } else {
+              handlePaginationChange({
+                order: key,
+                orderDir: 'asc',
+              })
+            }
+          }}
+        />
+      </Panel>
     </Container>
   )
 }

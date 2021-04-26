@@ -1,41 +1,16 @@
 import { FC } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
-import Paper from '@material-ui/core/Paper'
-import Button from '@material-ui/core/Button'
-import LinearProgress from '@material-ui/core/LinearProgress'
 import Alert from '@material-ui/lab/Alert'
 import AlertTitle from '@material-ui/lab/AlertTitle'
+
+import Panel, { PanelBody, PanelButton } from 'molecules/Panel'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     '& .Mui-error > input': {
       borderColor: 'red',
     },
-  },
-  paper: {
-    width: '100%',
-    marginBottom: theme.spacing(2),
-    overflow: 'hidden',
-  },
-  header: {
-    borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
-  },
-  toolbar: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-  },
-  action: {
-    marginLeft: theme.spacing(1),
-  },
-  title: {
-    flex: '1 1 100%',
-  },
-  body: {
-    padding: theme.spacing(2),
   },
 }))
 
@@ -62,44 +37,20 @@ const FormPage: FC<Props> = ({
   return (
     <form onSubmit={onSubmit} className={classes.root}>
       <Container maxWidth="md">
-        <Paper className={classes.paper}>
-          <AppBar
-            className={classes.header}
-            position="static"
-            color="default"
-            elevation={0}
-          >
-            <Toolbar className={classes.toolbar}>
-              <Typography
-                className={classes.title}
-                variant="h6"
-                id="tableTitle"
-                component="div"
-              >
-                {title}
-              </Typography>
-              <Button
-                className={classes.action}
-                onClick={onCancel}
-                type="button"
-                variant="contained"
-                color="default"
-                disableElevation
-              >
+        <Panel
+          title={title}
+          isLoading={isLoading}
+          renderActions={() => (
+            <>
+              <PanelButton onClick={onCancel} type="button" color="default">
                 Cancelar
-              </Button>
-              <Button
-                className={classes.action}
-                type="submit"
-                variant="contained"
-                color="primary"
-                disableElevation
-              >
+              </PanelButton>
+              <PanelButton type="submit" color="primary">
                 Salvar
-              </Button>
-            </Toolbar>
-            {isLoading && <LinearProgress />}
-          </AppBar>
+              </PanelButton>
+            </>
+          )}
+        >
           {customError && (
             <Alert severity="error">
               <AlertTitle>Erro</AlertTitle>
@@ -118,8 +69,8 @@ const FormPage: FC<Props> = ({
               </ul>
             </Alert>
           )}
-          <div className={classes.body}>{!isLoading && children}</div>
-        </Paper>
+          <PanelBody>{!isLoading && children}</PanelBody>
+        </Panel>
       </Container>
     </form>
   )
