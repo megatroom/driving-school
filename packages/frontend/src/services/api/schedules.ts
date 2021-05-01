@@ -1,4 +1,5 @@
 import client, { Pagination, ResponseListData } from './client'
+import { getStartOfTheDay } from 'formatters/date'
 
 export interface SchedulingTypePayload {
   description: string
@@ -31,11 +32,14 @@ export const getSchedulingTypes = ({
   search,
 }: Pagination): Promise<ResponseListData<SchedulingType>> =>
   client
-    .get(
-      `/schedules/types?page=${page}&perPage=${perPage}&order=${order}${
-        search ? `&search=${search}` : ''
-      }`
-    )
+    .get('/schedules/types', {
+      params: {
+        page,
+        perPage,
+        order,
+        search: search || undefined,
+      },
+    })
     .then(({ data }) => data)
 
 export const getSchedulingType = (id: number): Promise<SchedulingType> =>
@@ -63,11 +67,28 @@ export const getSchedules = ({
   search,
 }: Pagination): Promise<ResponseListData<Scheduling>> =>
   client
-    .get(
-      `/schedules?page=${page}&perPage=${perPage}&order=${order}&orderDir=${orderDir}${
-        search ? `&search=${search}` : ''
-      }`
-    )
+    .get('/schedules', {
+      params: {
+        page,
+        perPage,
+        order,
+        orderDir,
+        search: search || undefined,
+      },
+    })
+    .then(({ data }) => data)
+
+export const getSchedulesAboveNow = () =>
+  client
+    .get('/schedules', {
+      params: {
+        page: 1,
+        perPage: 100,
+        order: 'date',
+        orderDir: 'asc',
+        dateAbove: getStartOfTheDay(),
+      },
+    })
     .then(({ data }) => data)
 
 export const getScheduling = (id: number): Promise<Scheduling> =>

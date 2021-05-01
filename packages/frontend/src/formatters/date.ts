@@ -2,6 +2,7 @@ import parse from 'date-fns/parse'
 import format from 'date-fns/format'
 import formatISO from 'date-fns/formatISO'
 import parseISO from 'date-fns/parseISO'
+import startOfToday from 'date-fns/startOfToday'
 
 const formatPayloadWithFormat = (str: string, customFormat: string) => {
   if (!str) {
@@ -40,3 +41,5 @@ export const formatDateToPayload = (date: string) => {
 
   return result
 }
+
+export const getStartOfTheDay = () => formatISO(startOfToday())

@@ -9,13 +9,19 @@ import { idSchema } from '../../schemas/core'
 import authenticate from '../../middlewares/authenticate'
 import validate from '../../middlewares/validate'
 import Scheduling from '../../models/Scheduling'
+import joi from 'joi'
 
 const router = Router()
 
 router.get(
   '/schedules',
   authenticate(),
-  validate({ query: paginationQuerySchema() }),
+  validate({
+    query: {
+      ...paginationQuerySchema(),
+      dateAbove: joi.date().iso(),
+    },
+  }),
   async (req, res, next) => {
     try {
       const {
@@ -25,18 +31,20 @@ router.get(
         orderDirection,
         search,
       } = formatRequestPagination(req)
+      const dateAbove = req.query.dateAbove as string
 
       const model = new Scheduling()
-      const total = await model.count()
-      const data = await model.findAll(
-        perPage,
-        offset,
-        order,
-        orderDirection,
-        search
-      )
 
-      res.json({ data, total })
+      res.json(
+        await model.findAll(
+          perPage,
+          offset,
+          order,
+          orderDirection,
+          search,
+          dateAbove
+        )
+      )
     } catch (error) {
       next(error)
     }

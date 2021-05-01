@@ -84,12 +84,13 @@ export default class SchedulingType extends BaseModel {
     return null
   }
 
-  findAll(
+  async findAll(
     limit: number,
     offset: number,
     order: string[],
     orderDirection: string,
-    search: string | undefined
+    search: string | undefined,
+    dateAbove: string | undefined
   ) {
     const orderBy = order.reduce((accumulator: any[], field: string) => {
       switch (field) {
@@ -112,7 +113,7 @@ export default class SchedulingType extends BaseModel {
       }
     }, [])
 
-    const newConnection = this.connection
+    const selectConnection = this.connection
       .select(
         'a.id',
         'a.data as date',
@@ -126,13 +127,43 @@ export default class SchedulingType extends BaseModel {
       .innerJoin({ c: 'pessoas' }, 'b.idpessoa', 'c.id')
       .innerJoin({ d: 'tiposagendamentos' }, 'a.idtipoagendamento', 'd.id')
 
+    const countConnection = this.connection({ a: this.tableName })
+      .count('a.id as total')
+      .innerJoin({ b: 'alunos' }, 'a.idaluno', 'b.id')
+      .innerJoin({ c: 'pessoas' }, 'b.idpessoa', 'c.id')
+      .innerJoin({ d: 'tiposagendamentos' }, 'a.idtipoagendamento', 'd.id')
+
     if (search) {
-      newConnection
+      selectConnection
+        .where('d.descricao', 'like', `%${search}%`)
+        .orWhere('c.nome', 'like', `%${search}%`)
+      countConnection
         .where('d.descricao', 'like', `%${search}%`)
         .orWhere('c.nome', 'like', `%${search}%`)
     }
 
-    return newConnection.orderBy(orderBy).limit(limit).offset(offset)
+    if (dateAbove) {
+      selectConnection.where('a.data', '>=', dateAbove)
+      countConnection.where('a.data', '>=', dateAbove)
+    }
+
+    selectConnection.orderBy(orderBy).limit(limit).offset(offset)
+
+    const [countRes, data] = await Promise.all([
+      countConnection,
+      selectConnection,
+    ])
+
+    return {
+      total: countRes[0].total,
+      data,
+    }
+  }
+
+  count() {
+    return this.connection(this.tableName)
+      .count('id as total')
+      .then((models) => models[0].total)
   }
 
   findById(id: number) {
