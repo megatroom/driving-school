@@ -44,10 +44,4 @@ export default abstract class BaseModel {
 
     return this.connection(this.tableName).where({ id }).del()
   }
-
-  count() {
-    return this.connection(this.tableName)
-      .count('id as total')
-      .then((models) => models[0].total)
-  }
 }

@@ -27,16 +27,10 @@ router.get(
       } = formatRequestPagination(req)
 
       const model = new Student()
-      const total = await model.count()
-      const data = await model.findAll(
-        perPage,
-        offset,
-        order,
-        orderDirection,
-        search
-      )
 
-      res.json({ data, total })
+      res.json(
+        await model.findAll(perPage, offset, order, orderDirection, search)
+      )
     } catch (error) {
       next(error)
     }

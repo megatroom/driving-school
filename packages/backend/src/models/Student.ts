@@ -154,7 +154,7 @@ export default class Student extends BaseModel {
       .then((models) => (models.length ? models[0] : null))
   }
 
-  findAll(
+  async findAll(
     limit: number,
     offset: number,
     order: string[],
@@ -188,7 +188,7 @@ export default class Student extends BaseModel {
       }
     }, [])
 
-    const newConnection = this.connection
+    const selectConnection = this.connection
       .select(
         'a.id',
         'a.matricula as enrollment',
@@ -200,15 +200,34 @@ export default class Student extends BaseModel {
       .from({ a: this.tableName })
       .innerJoin({ p: 'pessoas' }, 'a.idpessoa', 'p.id')
 
+    const countConnection = this.connection({ a: this.tableName })
+      .count('a.id as total')
+      .innerJoin({ p: 'pessoas' }, 'a.idpessoa', 'p.id')
+
     if (search) {
-      newConnection
+      selectConnection
+        .where('p.nome', 'like', `%${search}%`)
+        .orWhere('p.cpf', 'like', `%${search}%`)
+        .orWhere('p.telefone', 'like', `%${search}%`)
+        .orWhere('p.celular', 'like', `%${search}%`)
+      countConnection
         .where('p.nome', 'like', `%${search}%`)
         .orWhere('p.cpf', 'like', `%${search}%`)
         .orWhere('p.telefone', 'like', `%${search}%`)
         .orWhere('p.celular', 'like', `%${search}%`)
     }
 
-    return newConnection.orderBy(orderBy).limit(limit).offset(offset)
+    selectConnection.orderBy(orderBy).limit(limit).offset(offset)
+
+    const [countRes, data] = await Promise.all([
+      countConnection,
+      selectConnection,
+    ])
+
+    return {
+      total: countRes[0].total,
+      data,
+    }
   }
 
   countByOriginId(originId: number) {

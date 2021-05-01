@@ -39,7 +39,7 @@ export default class CarType extends BaseModel {
     return null
   }
 
-  findAll(
+  async findAll(
     limit: number,
     offset: number,
     order: string[],
@@ -56,15 +56,28 @@ export default class CarType extends BaseModel {
       }
     }, [])
 
-    const newConnection = this.connection
+    const selectConnection = this.connection
       .select('id', 'descricao as description', 'comissao as commission')
       .from(this.tableName)
 
+    const countConnection = this.connection(this.tableName).count('id as total')
+
     if (search) {
-      newConnection.where('descricao', 'like', `%${search}%`)
+      selectConnection.where('descricao', 'like', `%${search}%`)
+      countConnection.where('descricao', 'like', `%${search}%`)
     }
 
-    return newConnection.orderBy(orderBy).limit(limit).offset(offset)
+    selectConnection.orderBy(orderBy).limit(limit).offset(offset)
+
+    const [countRes, data] = await Promise.all([
+      countConnection,
+      selectConnection,
+    ])
+
+    return {
+      total: countRes[0].total,
+      data,
+    }
   }
 
   findById(id: number) {

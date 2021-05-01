@@ -80,7 +80,7 @@ export default class Car extends BaseModel {
       })
   }
 
-  findAll(
+  async findAll(
     limit: number,
     offset: number,
     order: string[],
@@ -101,7 +101,7 @@ export default class Car extends BaseModel {
       }
     }, [])
 
-    const newConnection = this.connection
+    const selectConnection = this.connection
       .select(
         'c.id',
         'c.idtipocarro as carTypeId',
@@ -113,19 +113,36 @@ export default class Car extends BaseModel {
       )
       .from({ c: this.tableName })
 
+    const countConnection = this.connection({ c: this.tableName }).count(
+      'c.id as total'
+    )
+
     if (search) {
-      newConnection
+      selectConnection
+        .where('c.descricao', 'like', `%${search}%`)
+        .orWhere('c.placa', 'like', `%${search}%`)
+      countConnection
         .where('c.descricao', 'like', `%${search}%`)
         .orWhere('c.placa', 'like', `%${search}%`)
     }
 
-    return newConnection
+    selectConnection
       .innerJoin({ t: 'tipocarros' }, 'c.idtipocarro', 't.id')
       .leftJoin({ f: 'funcionarios' }, 'c.idfunfixo', 'f.id')
       .leftJoin({ p: 'pessoas' }, 'f.idpessoa', 'p.id')
       .orderBy(orderBy)
       .limit(limit)
       .offset(offset)
+
+    const [countRes, data] = await Promise.all([
+      countConnection,
+      selectConnection,
+    ])
+
+    return {
+      total: countRes[0].total,
+      data,
+    }
   }
 
   countByCarTypeId(carTypeId: number) {
