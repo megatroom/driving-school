@@ -3,5 +3,5 @@ import Home from '.'
 
 test('renders successfully', () => {
   render(<Home />)
-  expect(screen.getByText('Home')).toBeInTheDocument()
+  expect(screen.getByText('Agendamentos')).toBeInTheDocument()
 })
