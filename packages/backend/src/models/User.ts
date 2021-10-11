@@ -1,7 +1,7 @@
-import { Knex } from 'knex'
-
+import joi from 'joi'
 import { encryptPassword } from '../app/security'
-import { getDbConnection } from '../app/database'
+import { optionalForeignKey } from '../validators/fields'
+import BaseModel from './BaseModel'
 
 interface IMenuModel {
   group_id: number
@@ -59,13 +59,45 @@ const formatMenu = (models: IMenuModel[]) => {
   return result
 }
 
-class User {
-  connection: Knex
-  tableName: string
-
+class User extends BaseModel {
   constructor() {
-    this.connection = getDbConnection()
-    this.tableName = 'usuarios'
+    super('usuarios')
+  }
+
+  static postSchema() {
+    return {
+      login: joi.string().required(),
+      employeeId: joi.number().custom(optionalForeignKey).allow(null),
+      name: joi.any().when('employeeId', {
+        is: joi.number().min(1),
+        then: joi.string().allow(null),
+        otherwise: joi.string().required(),
+      }),
+      observations: joi.string().allow(null),
+    }
+  }
+
+  static labelsSchema() {
+    return {
+      login: 'Login',
+      name: 'Nome',
+      observations: 'Observação',
+      employeeId: 'Funcionário',
+      employeeName: 'Funcionário',
+    }
+  }
+
+  castPayloadToModel(payload: any) {
+    return {
+      login: payload.login,
+      nome: payload.name,
+      observacao: payload.observations,
+      idfuncionario: payload.employeeId,
+    }
+  }
+
+  canDelete(id: number): Promise<string | null> {
+    throw new Error('Method not implemented.')
   }
 
   findIdByLogin(login: string, password: string) {
@@ -84,9 +116,18 @@ class User {
 
   findById(id: number) {
     return this.connection
-      .first('id', 'login', 'nome as name')
-      .from(this.tableName)
-      .where({ id })
+      .first(
+        'u.id',
+        'u.login',
+        'u.nome as name',
+        'u.observacao as observations',
+        'f.id as employeeId',
+        'p.nome as employeeName'
+      )
+      .from({ u: this.tableName })
+      .leftJoin({ f: 'funcionarios' }, 'u.idfuncionario', 'f.id')
+      .leftJoin({ p: 'pessoas' }, 'f.idpessoa', 'p.id')
+      .where({ 'u.id': id })
   }
 
   findAllPages() {
@@ -130,6 +171,70 @@ class User {
       .orWhere('t.padrao', 1)
       .orderBy(['m.ordem', 't.ordem'])
       .then(formatMenu)
+  }
+
+  async findAll(
+    limit: number,
+    offset: number,
+    order: string[],
+    orderDirection: string,
+    search: string | undefined
+  ) {
+    const orderBy = order.reduce((accumulator: any[], field: string) => {
+      switch (field) {
+        case 'name':
+          return accumulator.concat([{ column: 'name', order: orderDirection }])
+        case 'login':
+          return accumulator.concat([
+            { column: 'u.login', order: orderDirection },
+          ])
+        default:
+          return accumulator
+      }
+    }, [])
+
+    const selectConnection = this.connection
+      .select(
+        'u.id',
+        'u.login',
+        'f.id as employeeId',
+        this.connection.raw('coalesce(p.nome, u.nome) as name'),
+        'u.observacao as observations'
+      )
+      .from({ u: this.tableName })
+
+    const countConnection = this.connection({ u: this.tableName })
+      .count('u.id as total')
+      .leftJoin({ f: 'funcionarios' }, 'u.idfuncionario', 'f.id')
+      .leftJoin({ p: 'pessoas' }, 'f.idpessoa', 'p.id')
+
+    if (search) {
+      selectConnection
+        .where('u.login', 'like', `%${search}%`)
+        .orWhere('u.nome', 'like', `%${search}%`)
+        .orWhere('p.nome', 'like', `%${search}%`)
+      countConnection
+        .where('u.login', 'like', `%${search}%`)
+        .orWhere('u.nome', 'like', `%${search}%`)
+        .orWhere('p.nome', 'like', `%${search}%`)
+    }
+
+    selectConnection
+      .leftJoin({ f: 'funcionarios' }, 'u.idfuncionario', 'f.id')
+      .leftJoin({ p: 'pessoas' }, 'f.idpessoa', 'p.id')
+      .orderBy(orderBy)
+      .limit(limit)
+      .offset(offset)
+
+    const [countRes, data] = await Promise.all([
+      countConnection,
+      selectConnection,
+    ])
+
+    return {
+      total: countRes[0].total,
+      data,
+    }
   }
 }
 

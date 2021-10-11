@@ -30,7 +30,7 @@ export default abstract class BaseModel {
       .update(this.castPayloadToModel(payload))
 
     if (affectedCount === 0) {
-      throw new NotFoundError('Tipo de carro não encontrado')
+      throw new NotFoundError('Registro não encontrado')
     }
 
     return this.findById(id)

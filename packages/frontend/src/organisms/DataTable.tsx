@@ -212,8 +212,8 @@ export default function DataTable({
         component="div"
         count={total}
         page={page}
-        onChangePage={onPageChange}
-        onChangeRowsPerPage={onRowsPerPageChange}
+        onPageChange={onPageChange}
+        onRowsPerPageChange={onRowsPerPageChange}
       />
       <ConfirmDialog
         id="delete"

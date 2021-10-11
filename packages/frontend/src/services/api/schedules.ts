@@ -78,14 +78,21 @@ export const getSchedules = ({
     })
     .then(({ data }) => data)
 
-export const getSchedulesAboveNow = () =>
+export const getSchedulesAboveNow = ({
+  page,
+  perPage,
+  order,
+  orderDir,
+  search,
+}: Pagination) =>
   client
     .get('/schedules', {
       params: {
-        page: 1,
-        perPage: 100,
-        order: 'date',
-        orderDir: 'asc',
+        page,
+        perPage,
+        order,
+        orderDir,
+        search: search || undefined,
         dateAbove: getStartOfTheDay(),
       },
     })

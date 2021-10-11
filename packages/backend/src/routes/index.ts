@@ -9,6 +9,8 @@ import studentOrigins from './students/origins'
 import students from './students'
 import schedulesTypes from './schedules/types'
 import schedules from './schedules'
+import notifications from './notifications'
+import users from './users'
 
 export default [
   healthcheck,
@@ -22,4 +24,6 @@ export default [
   students,
   schedulesTypes,
   schedules,
+  notifications,
+  users,
 ]
