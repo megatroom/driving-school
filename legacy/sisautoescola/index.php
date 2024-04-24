@@ -49,7 +49,7 @@ if (isset ($_SESSION["LOGIN"]) and strlen($_SESSION["LOGIN"]) > 0) {
 
 $lstTelas = null;
 if (isset ($login) and $login != "") {
-    if ($login == 'admin') {
+    if (strtolower($login) == 'admin') {
         $lstTelas = $mysql->select(
                 'a.id, b.descricao as modulo, a.descricao as tela, a.endereco, a.icone',
                 'telas a, modulos b',
@@ -58,7 +58,7 @@ if (isset ($login) and $login != "") {
                 'b.ordem, a.ordem');
     } else {
         $lstTelas = $mysql->select(
-                'distinct id, modulo, tela, icone, endereco',
+                'distinct id, modulo, tela, icone, endereco, ordemmodulos, ordemtelas',
                 'vacessos',
                 "idusuario = '".$_SESSION["IDUSUARIO"]."' or padrao = 1",
                 null,

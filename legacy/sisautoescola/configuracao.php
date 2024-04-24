@@ -3,6 +3,8 @@ define("CAMINHO_MODULOS", "modulos/");
 
 include_once("modulos/global/global.php");
 
+date_default_timezone_set('America/Sao_Paulo');
+
 function __autoload($class_name) {
     $file_name = $class_name . '.php';
     if (file_exists($file_name)) {
