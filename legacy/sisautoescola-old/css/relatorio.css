@@ -1,0 +1,26 @@
+/* 
+    Document   : relatorio
+    Created on : 10/03/2011, 20:44:35
+    Author     : MegaTroom
+    Description:
+        Folha de estilos para os relatórios.
+*/
+body {
+    font: 0.75em/1.73em Verdana,Arial,Geneva,Helvetica,sans-serif;
+}
+table {
+    border-collapse: collapse;
+    border-color: #4682B4;
+}
+th {
+    background-color: #DCE4FF;
+    color: #003399;
+    font-weight: normal;
+}
+tfoot {
+    font-weight: normal;
+}
+h2 {
+    color: #191970;
+    font-size: 10pt;
+}
