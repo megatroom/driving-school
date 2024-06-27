@@ -83,26 +83,31 @@ class modulos_global_mysql {
      * @param string $query
      * @return mixed
      */
-    public static function getQuery($query, $open = true) {
-	if (self::_OPEN($open)) {
+    public static function getQuery($query, $open = true)
+    {
+        if (self::_OPEN($open)) {
             $qry_exec = str_replace("#", "", $query);
             $qry_exec = str_replace("--", "", $qry_exec);
-	    $query_aux = explode(" ", $query);
+            $query_aux = explode(" ", $query);
             self::$last_sql = $query;
             $result = mysql_query($qry_exec);
-	    if ($result) {
-		if (is_array($query_aux)) {
-		    if ($query_aux[0] == "insert") {
-			$id_return = mysql_insert_id();
-			if ($id_return) {
-			    return $id_return;
-			}
-		    }
-		    return $result;
-		}
-	    }
-	}
-	return false;
+            if ($result) {
+                if (is_array($query_aux)) {
+                    if ($query_aux[0] == "insert") {
+                        $id_return = mysql_insert_id();
+                        if ($id_return) {
+                            return $id_return;
+                        }
+                    }
+                    return $result;
+                }
+            } else {
+                echo "\n!! SQL ERROR !!\n";
+                echo "SQL: " . $qry_exec . "\n";
+                echo "Error: " . mysql_error() . "\n\n";
+            }
+        }
+        return false;
     }
 
     function __construct() {
@@ -197,33 +202,35 @@ class modulos_global_mysql {
 	return false;
     }
 
-    public function select($pFields,$pTable=null,$pWhere=null,$pOther=null,$pOrderBy=null) {
+    public function select($pFields, $pTable = null, $pWhere = null, $pOther = null, $pOrderBy = null)
+    {
         $sql = '';
-        $sql .= 'select '. $pFields .' ';
-        if (isset ($pTable)) {
-            $sql .= 'from '. $pTable .' ';
+        $sql .= 'select ' . $pFields . ' ';
+        if (isset($pTable)) {
+            $sql .= 'from ' . $pTable . ' ';
         }
-        if (isset ($pWhere)) {
-            $sql .= 'where '. $pWhere .' ';
+        if (isset($pWhere)) {
+            $sql .= 'where ' . $pWhere . ' ';
         }
-        if (isset ($pOther)) {
-            $sql .= $pOther .' ';
+        if (isset($pOther)) {
+            $sql .= $pOther . ' ';
         }
-        if (isset ($pOrderBy)) {
-            $sql .= 'order by '. $pOrderBy .' ';
-        }        
+        if (isset($pOrderBy)) {
+            $sql .= 'order by ' . $pOrderBy . ' ';
+        }
+
         $fifo = self::getQuery($sql);
         if ($fifo) {
-	    while ($result = mysql_fetch_array($fifo, MYSQL_ASSOC)) {
-		$array[] = $result;
-	    }
-	    mysql_free_result($fifo);
-	    if (isset($array)) {
-		return $array;
-	    }
-	}
+            while ($result = mysql_fetch_array($fifo, MYSQL_ASSOC)) {
+                $array[] = $result;
+            }
+            mysql_free_result($fifo);
+            if (isset($array)) {
+                return $array;
+            }
+        }
 
-	return false;
+        return false;
     }
 
     public function getCurrentDate() {

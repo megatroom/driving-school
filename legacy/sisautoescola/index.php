@@ -58,7 +58,7 @@ if (isset ($login) and $login != "") {
                 'b.ordem, a.ordem');
     } else {
         $lstTelas = $mysql->select(
-                'distinct id, modulo, tela, icone, endereco',
+                'distinct id, modulo, tela, icone, endereco, ordemmodulos, ordemtelas',
                 'vacessos',
                 "idusuario = '".$_SESSION["IDUSUARIO"]."' or padrao = 1",
                 null,
@@ -66,10 +66,10 @@ if (isset ($login) and $login != "") {
     }
 }
 
-//if ($lstTelas == null) {
+// if ($lstTelas == null) {
 //    echo 'Listagem de telas não encontrada! <br />';
 //    echo $mysql->getMsgErro().'<br />';
-//}
+// }
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -254,6 +254,7 @@ if ($authenticated) {
    </div>
    <div class="ui-dialog-content ui-widget-content" id="windowContent">
       <p>Carregando...</p>
+      <h1>OLaaaaaaaaa</h1>
    </div>
 </div>
 <?php
