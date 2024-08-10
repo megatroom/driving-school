@@ -1,9 +1,10 @@
+import { Button as ChakraButton } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
 interface ButtonProps {
   children: ReactNode;
 }
 
-export default function Button({ children }: ButtonProps) {
-  return <button>{children}</button>;
+export function Button({ children }: ButtonProps) {
+  return <ChakraButton colorScheme="blue">{children}</ChakraButton>;
 }
