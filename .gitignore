@@ -37,3 +37,5 @@ next-env.d.ts
 
 # legacy files
 legacy/mysql_data
+
+*storybook.log
