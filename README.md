@@ -30,6 +30,16 @@ First, install de dependencies:
 npm install
 ```
 
+Create the `.env` file with the following content:
+
+```ini
+UNPLASH_ACCESS_KEY=
+DB_DATABASE=sisautoescola
+DB_HOST=localhost
+DB_USER=root
+DB_PASS=
+```
+
 Then run the development server:
 
 ```bash
