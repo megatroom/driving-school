@@ -29,17 +29,17 @@ jobs:
     steps:
       - checkout
       - *current_workspace
-      - node/run:
+      - run:
           name: Format Check
-          npm-run: npm run format:check
-      - node/run:
+          command: npm run format:check
+      - run:
           name: Lint Check
-          npm-run: npm run lint
+          command: npm run lint
 
 workflows:
   test_my_app:
     jobs:
       - install-dependencies
-      - static-validation
+      - static-validation:
           requires:
             - install-dependencies
