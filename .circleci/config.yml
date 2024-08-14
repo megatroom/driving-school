@@ -36,6 +36,7 @@ jobs:
     steps:
       - checkout
       - *current_workspace
+      - run: cp .env.test .env
       - run: npm run build
 
   build-storybook:
