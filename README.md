@@ -1,5 +1,7 @@
 # Driving School
 
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/megatroom/driving-school/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/megatroom/driving-school/tree/main)
+
 Complete system for driving school
 
 ## Getting Started
