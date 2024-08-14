@@ -1,11 +1,8 @@
 version: 2.1
 
-orbs:
-  node: circleci/node@5.2.0
-
 aliases:
   - &docker_image
-    - image: cimg/base:stable
+    - image: circleci/node:20.16.0-browsers
 
   - &current_workspace
     attach_workspace: { at: '.' }
@@ -15,10 +12,8 @@ jobs:
     docker: *docker_image
     steps:
       - checkout
-      - node/install:
-          node-version: '20.16.0'
       - run: node --version
-      - node/install-packages
+      - run: npm ci
       - persist_to_workspace:
           root: '.'
           paths:
@@ -35,6 +30,15 @@ jobs:
       - run:
           name: Lint Check
           command: npm run lint
+
+  build-next-app:
+    docker: *docker_image
+    steps:
+      - checkout
+      - *current_workspace
+      - run:
+          name: Format Check
+          command: npm run
 
 workflows:
   test_my_app:
