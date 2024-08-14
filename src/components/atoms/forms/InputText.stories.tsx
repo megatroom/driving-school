@@ -14,12 +14,14 @@ export const Default: Story = {
   args: {
     label: 'Label',
     help: 'Help Text',
+    name: 'default',
   },
 };
 
 export const WithError: Story = {
   args: {
     label: 'Label',
-    error: 'This field is required.',
+    name: 'with-error',
+    errors: ['This field is required.'],
   },
 };

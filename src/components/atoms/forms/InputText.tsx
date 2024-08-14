@@ -1,26 +1,29 @@
-import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-  Input,
-} from '@chakra-ui/react';
+import { Input, InputProps } from '@chakra-ui/react';
+import { BaseFormControlProps, FormControl } from './FormControl';
 
-interface InputTextProps {
-  label: string;
-  help?: string;
-  error?: string;
+interface InputTextProps extends BaseFormControlProps {
+  onChange?: InputProps['onChange'];
+  onBlur?: InputProps['onBlur'];
+  value?: string;
+  name: string;
 }
 
-export function InputText({ label, help, error }: InputTextProps) {
-  const hasError = !!error;
-
+export function InputText({
+  onChange,
+  onBlur,
+  name,
+  value,
+  ...rest
+}: InputTextProps) {
   return (
-    <FormControl isInvalid={hasError}>
-      <FormLabel>{label}</FormLabel>
-      <Input type="text" />
-      {help && <FormHelperText>{help}</FormHelperText>}
-      {hasError && <FormErrorMessage>{error}</FormErrorMessage>}
+    <FormControl {...rest}>
+      <Input
+        type="text"
+        onChange={onChange}
+        onBlur={onBlur}
+        value={value}
+        name={name}
+      />
     </FormControl>
   );
 }

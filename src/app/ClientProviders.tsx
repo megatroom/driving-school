@@ -3,6 +3,7 @@
 import React from 'react';
 import { CacheProvider } from '@chakra-ui/next-js';
 import { ChakraProvider } from '@chakra-ui/react';
+import { theme } from '@/styles/theme';
 
 interface ClientProvidersProps {
   children: React.ReactNode;
@@ -11,7 +12,7 @@ interface ClientProvidersProps {
 export function ClientProviders({ children }: ClientProvidersProps) {
   return (
     <CacheProvider>
-      <ChakraProvider>{children}</ChakraProvider>
+      <ChakraProvider theme={theme}>{children}</ChakraProvider>
     </CacheProvider>
   );
 }

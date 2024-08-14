@@ -1,28 +1,31 @@
 'use client';
 
-import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-  Input,
-} from '@chakra-ui/react';
+import { Input, InputProps } from '@chakra-ui/react';
+import { BaseFormControlProps, FormControl } from './FormControl';
 
-interface InputPasswordProps {
-  label: string;
-  help?: string;
-  error?: string;
+interface InputPasswordProps extends BaseFormControlProps {
+  onChange?: InputProps['onChange'];
+  onBlur?: InputProps['onBlur'];
+  value?: string;
+  name: string;
 }
 
-export function InputPassword({ label, help, error }: InputPasswordProps) {
-  const hasError = !!error;
-
+export function InputPassword({
+  onChange,
+  onBlur,
+  name,
+  value,
+  ...rest
+}: InputPasswordProps) {
   return (
-    <FormControl isInvalid={hasError}>
-      <FormLabel>{label}</FormLabel>
-      <Input type="password" />
-      {help && <FormHelperText>{help}</FormHelperText>}
-      {hasError && <FormErrorMessage>{error}</FormErrorMessage>}
+    <FormControl {...rest}>
+      <Input
+        type="password"
+        onChange={onChange}
+        onBlur={onBlur}
+        value={value}
+        name={name}
+      />
     </FormControl>
   );
 }

@@ -1,15 +1,57 @@
-import React from 'react';
-import { LoginPage } from '../../../components/pages/auth/LoginPage';
+'use client';
 
-const UNPLASH_RANDOM_CARS_IMAGE =
-  'https://api.unsplash.com/photos/random?query=cars&client_id=';
-const BACKGROUND_REVALIDATE = 3600; // 1 hour
+import React, { useEffect, useState } from 'react';
+import { authenticate } from '@/services/auth';
 
-export default async function Login() {
-  const backgroundUrl = `${UNPLASH_RANDOM_CARS_IMAGE}${process.env.UNPLASH_ACCESS_KEY}`;
-  const unplash = await fetch(backgroundUrl, {
-    next: { revalidate: BACKGROUND_REVALIDATE },
-  }).then((res) => res.json());
+import { LoginPage } from '@/components/pages/auth/LoginPage';
+import { getRandomImage } from '@/helpers/unplash';
+import { Form, Formik, FormikHelpers } from 'formik';
+import { FormState } from '@/models/form';
+import { LoginForm } from '@/models/auth';
 
-  return <LoginPage backgroundImageUrl={unplash.urls.raw} />;
+export default function Login() {
+  const [backgroundUrl, setBackgroundUrl] = useState<string | undefined>();
+  const [formState, setFormState] = useState<FormState>();
+
+  useEffect(() => {
+    getRandomImage()
+      .then((url) => {
+        setBackgroundUrl(url);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  });
+
+  const handleSubmit = (
+    values: LoginForm,
+    { setSubmitting }: FormikHelpers<LoginForm>,
+  ) => {
+    authenticate(values)
+      .then((result) => {
+        setSubmitting(false);
+        setFormState(result);
+      })
+      .catch(console.error);
+  };
+
+  return (
+    <Formik
+      initialValues={{ username: '', password: '' }}
+      onSubmit={handleSubmit}
+    >
+      {({ values, handleChange, handleBlur, isSubmitting }) => (
+        <Form>
+          <LoginPage
+            backgroundImageUrl={backgroundUrl}
+            formState={formState}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            pending={isSubmitting}
+            values={values}
+          />
+        </Form>
+      )}
+    </Formik>
+  );
 }

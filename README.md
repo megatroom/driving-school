@@ -33,12 +33,15 @@ npm install
 Create the `.env` file with the following content:
 
 ```ini
+SESSION_SECRET=
 UNPLASH_ACCESS_KEY=
 DB_DATABASE=sisautoescola
 DB_HOST=localhost
 DB_USER=root
 DB_PASS=
 ```
+
+To learn how to obtain these values, access the [Environment Variables](#environment-variables) topic.
 
 Then run the development server:
 
@@ -47,3 +50,21 @@ npm run dev
 ```
 
 Now you can access the URL: [http://localhost:3000/](http://localhost:3000/).
+
+## Environment Variables
+
+### `UNPLASH_ACCESS_KEY`
+
+Access the [Unsplash Developers apps area](https://unsplash.com/oauth/applications), create or select the app for this project.
+
+Go to `Keys` topic and get the `Access Key`.
+
+### `SESSION_SECRET`
+
+There are a few ways you can generate secret key to sign your session. For example, you may choose to use the openssl command in your terminal:
+
+```bash
+openssl rand -base64 32
+```
+
+This command generates a 32-character random string that you can use as your secret key.

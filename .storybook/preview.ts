@@ -8,7 +8,7 @@ const preview: Preview = {
         order: [
           'Driving School',
           'components',
-          ['atoms', 'templates', 'pages'],
+          ['atoms', 'molecules', 'organisms', 'templates', 'pages'],
           '*',
         ],
       },
