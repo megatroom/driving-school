@@ -36,9 +36,14 @@ jobs:
     steps:
       - checkout
       - *current_workspace
-      - run:
-          name: Format Check
-          command: npm run
+      - run: npm run build
+
+  build-storybook:
+    docker: *docker_image
+    steps:
+      - checkout
+      - *current_workspace
+      - run: npm run build-storybook
 
 workflows:
   test_my_app:
@@ -47,3 +52,9 @@ workflows:
       - static-validation:
           requires:
             - install-dependencies
+      - build-next-app:
+          requires:
+            - static-validation
+      - build-storybook:
+          requires:
+            - static-validation
