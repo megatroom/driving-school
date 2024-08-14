@@ -35,7 +35,9 @@ where login = ? and senha = md5(?) and f.status = 'A'
   );
 
   if (!users || users.length === 0) {
-    return;
+    return {
+      message: 'Usuário não encontrado.',
+    };
   }
 
   const { id, name, gender } = users[0];

@@ -1,9 +1,6 @@
-export type FormState =
+export type FormState<Model> =
   | {
-      errors?: {
-        name?: string[];
-        password?: string[];
-      };
+      errors?: Record<keyof Model, string[]>;
       message?: string;
     }
   | undefined;

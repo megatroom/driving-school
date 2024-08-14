@@ -44,7 +44,7 @@ export function FormControl({
   help,
   errors,
 }: FormControlProps) {
-  const hasError = errors && errors.length > 9;
+  const hasError = errors && errors.length > 0;
   return (
     <ChakraFormControl isInvalid={hasError} mb={4}>
       <FormLabel>{label}</FormLabel>
