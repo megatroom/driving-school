@@ -14,7 +14,9 @@ interface UserQuery extends RowDataPacket {
   gender?: string;
 }
 
-export async function authenticate(values: LoginForm): Promise<FormState> {
+export async function authenticate(
+  values: LoginForm,
+): Promise<FormState<LoginForm>> {
   const validatedFields = LoginFormSchema.safeParse(values);
 
   if (!validatedFields.success) {

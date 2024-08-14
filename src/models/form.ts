@@ -1,6 +1,6 @@
 export type FormState<Model> =
   | {
-      errors?: Record<keyof Model, string[]>;
+      errors?: Partial<Record<keyof Model, string[] | undefined>>;
       message?: string;
     }
   | undefined;

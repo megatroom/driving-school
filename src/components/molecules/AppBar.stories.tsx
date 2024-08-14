@@ -12,5 +12,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   name: 'AppBar',
-  args: {},
+  args: {
+    systemModules: [],
+  },
 };

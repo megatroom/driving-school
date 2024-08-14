@@ -68,3 +68,12 @@ openssl rand -base64 32
 ```
 
 This command generates a 32-character random string that you can use as your secret key.
+
+## Deploying
+
+To run th Next App in production you must run an optimized build:
+
+```bash
+npm run build
+npm run start
+```

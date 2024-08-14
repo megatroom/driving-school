@@ -11,7 +11,7 @@ import { LoginForm } from '@/models/auth';
 
 export default function Login() {
   const [backgroundUrl, setBackgroundUrl] = useState<string | undefined>();
-  const [formState, setFormState] = useState<FormState>();
+  const [formState, setFormState] = useState<FormState<LoginForm>>();
 
   useEffect(() => {
     getRandomImage()

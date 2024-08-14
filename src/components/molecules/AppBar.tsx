@@ -21,7 +21,6 @@ import {
 import { MdPowerSettingsNew } from 'react-icons/md';
 import { ChevronDownIcon, MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { SystemModule } from '@/models/system';
-import { logout } from '@/services/auth';
 
 import { Container } from '../atoms/layout/Container';
 
@@ -30,13 +29,9 @@ interface AppBarProps {
   logout?: () => void;
 }
 
-export function AppBar({ systemModules }: AppBarProps) {
+export function AppBar({ systemModules, logout }: AppBarProps) {
   const { colorMode, toggleColorMode } = useColorMode();
   const isDarkMode = colorMode === 'dark';
-
-  const handleLogout = () => {
-    logout();
-  };
 
   return (
     <Box boxShadow="base">
@@ -72,7 +67,7 @@ export function AppBar({ systemModules }: AppBarProps) {
               <MenuList>
                 <MenuItem
                   icon={<Icon as={MdPowerSettingsNew} />}
-                  onClick={handleLogout}
+                  onClick={logout}
                 >
                   Sair
                 </MenuItem>
