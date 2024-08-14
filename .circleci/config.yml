@@ -1,0 +1,61 @@
+version: 2.1
+
+aliases:
+  - &docker_image
+    - image: cimg/node:20.16.0-browsers
+
+  - &current_workspace
+    attach_workspace: { at: '.' }
+
+jobs:
+  install-dependencies:
+    docker: *docker_image
+    steps:
+      - checkout
+      - run: node --version
+      - run: npm ci
+      - persist_to_workspace:
+          root: '.'
+          paths:
+            - 'node_modules/*'
+
+  static-validation:
+    docker: *docker_image
+    steps:
+      - checkout
+      - *current_workspace
+      - run:
+          name: Format Check
+          command: npm run format:check
+      - run:
+          name: Lint Check
+          command: npm run lint
+
+  # It's necessary to run the legacy database for this build.
+  # build-next-app:
+  #   docker: *docker_image
+  #   steps:
+  #     - checkout
+  #     - *current_workspace
+  #     - run: npm run build
+
+  build-storybook:
+    docker: *docker_image
+    steps:
+      - checkout
+      - *current_workspace
+      - run: npm run build-storybook
+
+workflows:
+  test_my_app:
+    jobs:
+      - install-dependencies
+      - static-validation:
+          requires:
+            - install-dependencies
+      # - build-next-app:
+      #     requires:
+      #       - static-validation
+      - build-storybook:
+          requires:
+            - static-validation
