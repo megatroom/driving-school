@@ -31,13 +31,13 @@ jobs:
           name: Lint Check
           command: npm run lint
 
-  build-next-app:
-    docker: *docker_image
-    steps:
-      - checkout
-      - *current_workspace
-      - run: cp .env.test .env
-      - run: npm run build
+  # It's necessary to run the legacy database for this build.
+  # build-next-app:
+  #   docker: *docker_image
+  #   steps:
+  #     - checkout
+  #     - *current_workspace
+  #     - run: npm run build
 
   build-storybook:
     docker: *docker_image
@@ -53,9 +53,9 @@ workflows:
       - static-validation:
           requires:
             - install-dependencies
-      - build-next-app:
-          requires:
-            - static-validation
+      # - build-next-app:
+      #     requires:
+      #       - static-validation
       - build-storybook:
           requires:
             - static-validation
