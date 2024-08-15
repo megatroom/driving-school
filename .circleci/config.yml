@@ -31,6 +31,20 @@ jobs:
           name: Lint Check
           command: npm run lint
 
+  check-typescript:
+    docker: *docker_image
+    steps:
+      - checkout
+      - *current_workspace
+      - run: npm run tsc
+
+  unit-testing:
+    docker: *docker_image
+    steps:
+      - checkout
+      - *current_workspace
+      - run: npm run test:ci
+
   # It's necessary to run the legacy database for this build.
   # build-next-app:
   #   docker: *docker_image
@@ -53,9 +67,19 @@ workflows:
       - static-validation:
           requires:
             - install-dependencies
+      - check-typescript:
+          requires:
+            - install-dependencies
+      - unit-testing:
+          requires:
+            - install-dependencies
       # - build-next-app:
       #     requires:
       #       - static-validation
+      #       - check-typescript
+      #       - unit-testing
       - build-storybook:
           requires:
             - static-validation
+            - check-typescript
+            - unit-testing
