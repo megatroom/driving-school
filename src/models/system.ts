@@ -30,7 +30,7 @@ export interface Notification {
   sender: string;
 }
 
-export const castPriorityToUser = (priority: NotificationPriority): string => {
+export const castPriorityToText = (priority: NotificationPriority): string => {
   switch (priority) {
     case NotificationPriority.HIGH:
       return 'Alta';
@@ -38,6 +38,33 @@ export const castPriorityToUser = (priority: NotificationPriority): string => {
       return 'Média';
     default:
       return 'Baixa';
+  }
+};
+
+export type PriorityBadge = {
+  text: string;
+  color: string;
+};
+
+export const castPriorityToBadge = (
+  priority: NotificationPriority,
+): PriorityBadge => {
+  switch (priority) {
+    case NotificationPriority.HIGH:
+      return {
+        text: 'Alta',
+        color: 'red',
+      };
+    case NotificationPriority.MEDIUM:
+      return {
+        text: 'Média',
+        color: 'purple',
+      };
+    default:
+      return {
+        text: 'Baixa',
+        color: 'gray',
+      };
   }
 };
 
