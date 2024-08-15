@@ -11,17 +11,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  name: 'InputText',
   args: {
-    label: 'Label',
+    label: 'Input Text',
     help: 'Help Text',
     name: 'default',
-  },
-};
-
-export const WithError: Story = {
-  args: {
-    label: 'Label',
-    name: 'with-error',
-    errors: ['This field is required.'],
   },
 };

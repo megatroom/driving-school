@@ -8,7 +8,7 @@ interface PageBodyProps {
 
 export function PageBody({ children }: PageBodyProps) {
   return (
-    <Box py={6}>
+    <Box as="main" py={6}>
       <Container>{children}</Container>
     </Box>
   );
