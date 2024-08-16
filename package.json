@@ -22,6 +22,7 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
+    "@tanstack/react-table": "^8.20.1",
     "date-fns": "^3.6.0",
     "formik": "^2.4.6",
     "framer-motion": "^11.3.24",

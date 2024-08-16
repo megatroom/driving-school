@@ -22,7 +22,7 @@ export enum NotificationPriority {
   LOW = '2',
 }
 
-export interface Notification {
+export interface NotificationForRecipient {
   id: number;
   message: string;
   createdAt: Date;
@@ -30,14 +30,43 @@ export interface Notification {
   sender: string;
 }
 
+export interface Notification {
+  id: number;
+  status: string;
+  message: string;
+  createdAt: Date;
+  priority: NotificationPriority;
+  sender: {
+    id: number;
+    name: string;
+  };
+  recipient: {
+    id: number;
+    name: string;
+  };
+}
+
+export const castNotificationStatusToText = (status: NotificationStatus) => {
+  switch (status) {
+    case NotificationStatus.ACTIVE:
+      return 'Ativo';
+    case NotificationStatus.CONCLUDED:
+      return 'Concluído';
+    default:
+      return '';
+  }
+};
+
 export const castPriorityToText = (priority: NotificationPriority): string => {
   switch (priority) {
     case NotificationPriority.HIGH:
       return 'Alta';
     case NotificationPriority.MEDIUM:
       return 'Média';
-    default:
+    case NotificationPriority.LOW:
       return 'Baixa';
+    default:
+      return '';
   }
 };
 
