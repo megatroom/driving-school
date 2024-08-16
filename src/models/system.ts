@@ -3,11 +3,12 @@ import { z } from 'zod';
 export interface SystemPage {
   id: number;
   name: string;
+  path: string;
 }
 
 export interface SystemModule {
   id: number;
-  description: string;
+  name: string;
   pages: SystemPage[];
 }
 

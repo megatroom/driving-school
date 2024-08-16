@@ -89,13 +89,13 @@ export function AppBar({ systemModules, logout }: AppBarProps) {
                 variant="ghost"
                 rightIcon={<ChevronDownIcon />}
               >
-                {systemModule.description}
+                {systemModule.name}
               </MenuButton>
               <MenuList>
                 {systemModule.pages.map((page) => (
-                  <MenuItem key={`system-module-${page.id}`}>
-                    {page.name}
-                  </MenuItem>
+                  <Link key={`system-module-${page.id}`} href={page.path}>
+                    <MenuItem>{page.name}</MenuItem>
+                  </Link>
                 ))}
               </MenuList>
             </Menu>

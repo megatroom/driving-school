@@ -64,6 +64,16 @@ export async function getSession(): Promise<UserSession | null> {
   return userSession;
 }
 
+export async function getUserSession(): Promise<UserSession> {
+  const userSession = await getSession();
+
+  if (!userSession) {
+    throw new Error('User not found.');
+  }
+
+  return userSession;
+}
+
 export async function deleteSession(): Promise<void> {
   cookies().delete(USER_SESSION_COOKIE_KEY);
 }
