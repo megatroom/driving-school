@@ -9,12 +9,12 @@ import { PageBody } from '@/components/molecules/PageBody';
 import { Box } from '@chakra-ui/react';
 import { useTheme } from '@/hooks/useTheme';
 
-interface AdminLayoutProps {
+interface AdminTemplateProps {
   children: ReactNode;
   systemModules: SystemModule[];
 }
 
-export function AdminLayout({ systemModules, children }: AdminLayoutProps) {
+export function AdminTemplate({ systemModules, children }: AdminTemplateProps) {
   const { bodyBgColor } = useTheme();
 
   const handleLogout = () => {

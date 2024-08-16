@@ -25,6 +25,7 @@ import { SystemModule } from '@/models/system';
 
 import { Container } from '../atoms/layout/Container';
 import { useTheme } from '@/hooks/useTheme';
+import { Link } from '../atoms/navigation/Link';
 
 interface AppBarProps {
   systemModules: SystemModule[];
@@ -40,7 +41,9 @@ export function AppBar({ systemModules, logout }: AppBarProps) {
         <Container>
           <Flex minWidth="max-content" alignItems="center" gap="2">
             <Box p="2">
-              <Heading size="md">Auto Escola 4 Rodas</Heading>
+              <Link href="/">
+                <Heading size="md">Auto Escola 4 Rodas</Heading>
+              </Link>
             </Box>
             <Spacer />
             <ButtonGroup gap="2" alignItems="center">
@@ -86,13 +89,13 @@ export function AppBar({ systemModules, logout }: AppBarProps) {
                 variant="ghost"
                 rightIcon={<ChevronDownIcon />}
               >
-                {systemModule.description}
+                {systemModule.name}
               </MenuButton>
               <MenuList>
                 {systemModule.pages.map((page) => (
-                  <MenuItem key={`system-module-${page.id}`}>
-                    {page.name}
-                  </MenuItem>
+                  <Link key={`system-module-${page.id}`} href={page.path}>
+                    <MenuItem>{page.name}</MenuItem>
+                  </Link>
                 ))}
               </MenuList>
             </Menu>
