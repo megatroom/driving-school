@@ -1,7 +1,10 @@
 export type FormState<Model> =
   | {
+      success: boolean;
       errors?: Partial<Record<keyof Model, string[] | undefined>>;
       message?: string;
+      affectedRows?: number;
+      insertId?: number;
     }
   | undefined;
 

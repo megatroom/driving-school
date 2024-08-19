@@ -1,4 +1,4 @@
-import { Button } from '@/components/atoms/forms/Button';
+import { Button } from '@/components/atoms/actions/Button';
 import { InputPassword } from '@/components/atoms/forms/InputPassword';
 import { InputText } from '@/components/atoms/forms/InputText';
 import { AuthTemplate } from '@/components/templates/AuthTemplate';

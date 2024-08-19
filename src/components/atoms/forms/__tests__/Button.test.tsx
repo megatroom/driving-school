@@ -1,7 +1,7 @@
 import { expect } from '@storybook/test';
 import { render, screen } from '@testing-library/react';
 
-import { Button } from '../Button';
+import { Button } from '../../actions/Button';
 import userEvent from '@testing-library/user-event';
 
 describe('<Button />', () => {

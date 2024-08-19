@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { PAGE_BODY_SPACING } from '../constants';
 
 interface PageHeadingProps {
-  children: ReactNode;
+  children?: ReactNode;
   title: string;
 }
 

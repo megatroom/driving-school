@@ -66,17 +66,19 @@ export const SYSTEM_MODULE_RULES: SystemModuleRules = {
   '2': {
     id: 2,
     name: 'Cadastros',
-    active: false,
+    active: true,
     pages: {
       '8': {
         id: 8,
         name: 'Funções',
-        active: false,
+        active: true,
+        path: '/employees/roles',
       },
       '9': {
         id: 9,
-        name: 'Funcionáios',
-        active: false,
+        name: 'Funcionários',
+        active: true,
+        path: '/employees',
       },
       '10': {
         id: 10,
@@ -131,7 +133,8 @@ export const SYSTEM_MODULE_RULES: SystemModuleRules = {
       '45': {
         id: 45,
         name: 'Vales',
-        active: false,
+        active: true,
+        path: '/vouchers',
       },
       '49': {
         id: 49,

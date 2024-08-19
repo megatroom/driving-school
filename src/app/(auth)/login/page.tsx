@@ -29,8 +29,10 @@ export default function Login() {
   ) => {
     authenticate(values)
       .then((result) => {
-        setSubmitting(false);
-        setFormState(result);
+        if (!result?.success) {
+          setSubmitting(false);
+          setFormState(result);
+        }
       })
       .catch(console.error);
   };

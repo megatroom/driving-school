@@ -21,6 +21,7 @@ export async function authenticate(
 
   if (!validatedFields.success) {
     return {
+      success: false,
       errors: validatedFields.error.flatten().fieldErrors,
     };
   }
@@ -38,6 +39,7 @@ where login = ? and senha = md5(?) and f.status = 'A'
 
   if (!users || users.length === 0) {
     return {
+      success: false,
       message: 'Usuário não encontrado.',
     };
   }

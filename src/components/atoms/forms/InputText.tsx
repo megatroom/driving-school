@@ -4,6 +4,7 @@ import { BaseFormControlProps, FormControl } from './FormControl';
 interface InputTextProps extends BaseFormControlProps {
   onChange?: InputProps['onChange'];
   onBlur?: InputProps['onBlur'];
+  autoFocus?: boolean;
   value?: string;
   name: string;
 }
@@ -11,6 +12,7 @@ interface InputTextProps extends BaseFormControlProps {
 export function InputText({
   onChange,
   onBlur,
+  autoFocus,
   name,
   value,
   ...rest
@@ -21,6 +23,7 @@ export function InputText({
         type="text"
         onChange={onChange}
         onBlur={onBlur}
+        autoFocus={autoFocus}
         value={value}
         name={name}
       />

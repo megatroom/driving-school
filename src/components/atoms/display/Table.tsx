@@ -21,7 +21,12 @@ interface TableProps {
 export function Table({ children }: TableProps) {
   return (
     <TableContainer>
-      <ChakraTable variant="simple">{children}</ChakraTable>
+      <ChakraTable
+        variant="simple"
+        __css={{ 'table-layout': 'fixed', width: 'full' }}
+      >
+        {children}
+      </ChakraTable>
     </TableContainer>
   );
 }
