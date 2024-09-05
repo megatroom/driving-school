@@ -38,5 +38,6 @@ next-env.d.ts
 
 # legacy files
 legacy/mysql_data
+legacy/sisautoescola/config.ini
 
 *storybook.log

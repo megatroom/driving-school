@@ -14,7 +14,17 @@ This project consists of 3 parts:
 
 ### Legacy
 
-To run the project:
+First create the configuration file in `legacy/sisautoescola/config.ini`:
+
+```ini
+[db]
+host=legacy_database
+database=sisautoescola
+user=root
+pwd=
+```
+
+Then run the project:
 
 ```bash
 cd legacy
